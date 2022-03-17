@@ -25,10 +25,6 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # @app.route('/grants')
-    # def grants():
-    #     return 'Running'
-
     app.register_blueprint(grants_bp, url_prefix='/api')
 
     return app
