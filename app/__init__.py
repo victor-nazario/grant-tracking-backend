@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask
+from app.grants.grants import grants_bp
 
 
 def create_app(test_config=None):
@@ -24,8 +25,10 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    @app.route('/hello')
-    def hello():
-        return 'Running'
+    # @app.route('/grants')
+    # def grants():
+    #     return 'Running'
+
+    app.register_blueprint(grants_bp, url_prefix='/api')
 
     return app
