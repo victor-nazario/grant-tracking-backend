@@ -12,10 +12,10 @@ def make_pull(url: str) -> {}:
     :returns {}
     """
     try:
-        feed = feedparser.parse(url, agent='Feedfetcher-Google; (+http://www.google.com/feedfetcher.html; '
-                                           'feed-id=8639390370582375869)')
+        feed = feedparser.parse(url)
 
         data = {}
+        # print(feed.updated_parsed)
 
         for entry in feed.entries:
             if constant.NON_PROFITS_SEARCH_TERM in str(entry.content[0]['value']).lower() \
@@ -42,6 +42,7 @@ def job2():
 
 
 if __name__ == '__main__':
+    feedparser.USER_AGENT = constant.USER_AGENT
     schedule.every(10).seconds.do(job2)
 
     while True:
