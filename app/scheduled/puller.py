@@ -62,6 +62,7 @@ if __name__ == '__main__':
                             agent='Feedfetcher-Google; (+http://www.google.com/feedfetcher.html; '
                                   'feed-id=8639390370582375869)')
 
+
     # open a pickle file
     filename = 'mypickle.pk'
     with open(filename, 'wb') as fi:
