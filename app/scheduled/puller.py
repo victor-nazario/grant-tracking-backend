@@ -1,6 +1,7 @@
 import feedparser
 import constant
 import schedule
+import pickle
 
 
 def make_pull(url: str) -> {}:
@@ -12,10 +13,22 @@ def make_pull(url: str) -> {}:
     :returns {}
     """
     try:
-        feed = feedparser.parse(url)
+        # load your data back to memory when you need it
+        with open('mypickle.pk', 'rb') as etag_file:
+            previous_etag = pickle.load(etag_file)
 
+        feed = feedparser.parse(url, etag=previous_etag)
+        if feed.status == 304:
+            print(feed.status)
+            print(feed.etag)
+            return feed.feed
+
+        # open a pickle file
+        file_name = 'mypickle.pk'
+        with open(file_name, 'wb') as etag_file:
+            # dump your data into the file
+            pickle.dump(feed.etag, etag_file)
         data = {}
-        # print(feed.updated_parsed)
 
         for entry in feed.entries:
             if constant.NON_PROFITS_SEARCH_TERM in str(entry.content[0]['value']).lower() \
@@ -43,6 +56,13 @@ def job2():
 
 if __name__ == '__main__':
     feedparser.USER_AGENT = constant.USER_AGENT
+
+    # open a pickle file
+    filename = 'mypickle.pk'
+    with open(filename, 'wb') as file:
+        # dump your data into the file
+        pickle.dump('', file)
+
     schedule.every(10).seconds.do(job2)
 
     while True:
