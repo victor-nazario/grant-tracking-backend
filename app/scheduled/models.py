@@ -1,26 +1,28 @@
 from datetime import datetime
 
 from flask import Flask
-from flask_sqlalchemy import Model
-from pip._internal.commands import search
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean, event, MetaData
-from sqlalchemy.orm import scoped_session, sessionmaker, backref, relation
+# from flask_sqlalchemy import Model
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean, MetaData
+from sqlalchemy.orm import scoped_session, sessionmaker, declarative_base
+import os
 
 app = Flask(__name__)
-app.config['DATABASE_URI'] = ''
+
+BASE_DIR = os.path.dirname(os.path.realpath(__file__))
+app.config['DATABASE_URI'] = 'sqlite:///' + os.path.join(BASE_DIR, 'site.db')
 app.config['DATABASE_CONNECT_OPTIONS'] = ''
-engine = create_engine(app.config['DATABASE_URI'],
-                       convert_unicode=True,
-                       **app.config['DATABASE_CONNECT_OPTIONS'])
+
+Model = declarative_base()
+
+engine = create_engine(app.config['DATABASE_URI'], convert_unicode=True, echo=True)
+
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
                                          bind=engine))
 
-metadata = MetaData()
-
 
 def init_db():
-    metadata.create_all(bind=engine)
+    Model.metadata.create_all(bind=engine)
 
 
 class GrantEntry(Model):
@@ -29,7 +31,7 @@ class GrantEntry(Model):
     title = Column("title", String(75))
     content = Column("content", String)
     link = Column("link", String(150), unique=True)
-    close_date = Column(datetime)
+    close_date = Column(DateTime)
     modified = Column(Boolean)
     etag = Column("etag", String(35))
 
@@ -54,4 +56,4 @@ class GrantEntry(Model):
 
 
 if __name__ == '__main__':
-    app.run()
+    init_db()
