@@ -1,26 +1,26 @@
 from datetime import datetime
-
-from flask import Flask
 # from flask_sqlalchemy import Model
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean, MetaData
 from sqlalchemy.orm import scoped_session, sessionmaker, declarative_base
 import os
 
-app = Flask(__name__)
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
-app.config['DATABASE_URI'] = 'sqlite:///' + os.path.join(BASE_DIR, 'site.db')
-app.config['DATABASE_CONNECT_OPTIONS'] = ''
+path = 'sqlite:///' + os.path.join(BASE_DIR, 'site.db')
+
+db_settings = {
+    'DATABASE_URI': path,
+    'DATABASE_CONNECT_OPTIONS': ''
+}
 
 Model = declarative_base()
 
-engine = create_engine(app.config['DATABASE_URI'], convert_unicode=True, echo=True)
+engine = create_engine(db_settings['DATABASE_URI'], convert_unicode=True, echo=True)
 
 
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
                                          bind=engine))
-
 
 
 def init_db():
