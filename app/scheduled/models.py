@@ -1,4 +1,7 @@
 from datetime import datetime
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean, MetaData
+from sqlalchemy.orm import scoped_session, sessionmaker, declarative_base
+import os
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 path = 'sqlite:///' + os.path.join(BASE_DIR, 'site.db')
@@ -41,11 +44,20 @@ class GrantEntry(Model):
         self.etag = etag
 
     @property
-    def accepts_submission(self):
+    def accepts_submission(self) -> bool:
+        """
+        accepts_submission returns true if the caller grant is still accepting
+        submission in the current date
+        :return: a boolean representing if submission are being accepted, true if yes
+        """
         return self.close_date > datetime.utcnow()
 
     @property
-    def is_modified(self):
+    def is_modified(self) -> bool:
+        """
+        is_modified will return a bool value reprinting if the grant is a modified opportunity
+        :return a boolean representing if the grant is modified, true if yes:
+        """
         return self.modified
 
     def __eq__(self, other):
