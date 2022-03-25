@@ -40,7 +40,7 @@ class ModelsTestCase(unittest.TestCase):
     '''Make sure the db contains data before running. 
     Run test_ingestion if db is empty'''
     def test_select_all_grant_titles(self):
-        statement = select(GrantEntry.title)
+        statement = select(GrantEntry.title, GrantEntry.content, GrantEntry.link)
         session = db_session()
         result = session.execute(statement).all()
         print(result)
