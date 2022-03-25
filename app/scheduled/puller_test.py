@@ -6,31 +6,52 @@ from sqlalchemy import select
 import constant
 import pickle
 import unittest
+import string
+import random
+
+
+def generate_random_string():
+    """
+    Creates a random string with 20 characters.
+    :return: string
+    """
+    letters = string.ascii_lowercase
+    random_string = ''.join(random.choice(letters) for i in range(20))
+    return random_string
+
+
+def generate_random_etag():
+    """
+    This method creates a a random string and stores it in mypickle.pk as an etag.
+    """
+    file_name = 'mypickle.pk'
+    with open(file_name, 'wb') as etag_file:
+        # dump your data into the file
+        pickle.dump(generate_random_string(), etag_file)
 
 
 class ModelsTestCase(unittest.TestCase):
 
     def test_make_pull(self):
-        assert len(make_pull(constant.RSS_FEED_NEW_OP)['title'][0]) > 0, "Length of returned list should be greater than 0"
+        generate_random_etag()
+        result = make_pull(constant.RSS_FEED_NEW_OP)
+        self.assertTrue(len(result) > 0, "Length of returned list should be greater than 0")
+        print(result)
+        print(len(result))
 
     def test_ingestion(self):
         init_db()
-        file_name = 'mypickle.pk'
-        with open(file_name, 'wb') as etag_file:
-            # dump your data into the file
-            pickle.dump('75679f-5defe30v79e6k', etag_file)
-        data = make_pull(constant.RSS_FEED_NEW_OP)
-        list_titles = data['title']
-        list_contents = data['content']
-        list_links = data['link']
-        list_grants = []
-        for i in range(len(list_titles)):
-            list_grants.append(GrantEntry(title=list_titles[i], content=list_contents[i][0]['value'],
-                                          link=list_links[i], close_date=datetime.datetime(2022, 8, 20),
-                                          modified=True, etag=''))
+        generate_random_etag()
+        entry_list = make_pull(constant.RSS_FEED_NEW_OP)
+        grant_list = []
+
+        for entry in entry_list:
+            grant_list.append(GrantEntry(title=entry['title'], content=entry['content'][0]['value'],
+                                         link=entry['link'], close_date=datetime.datetime(2022, 8, 20),
+                                         modified=True, etag=''))
         some_session = db_session()
         with some_session as session:
-            session.add_all(list_grants)
+            session.add_all(grant_list)
             session.commit()
         statement = select(GrantEntry.title)
         result = session.execute(statement).all()

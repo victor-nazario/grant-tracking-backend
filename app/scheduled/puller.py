@@ -4,8 +4,7 @@ import schedule
 import pickle
 
 
-
-def make_pull(url: str) -> {}:
+def make_pull(url: str) -> []:
     """
     make_pull receives a URL linking to an RSS feed with relevant grant data to be acquired.
     The obtained data is then filtered to only include grants relevant to Puerto Rico and
@@ -29,18 +28,20 @@ def make_pull(url: str) -> {}:
         with open(file_name, 'wb') as etag_file:
             # dump your data into the file
             pickle.dump(feed.etag, etag_file)
-        data = {}
+
+        entry_list = []
 
         for entry in feed.entries:
             if constant.NON_PROFITS_SEARCH_TERM in str(entry.content[0]['value']).lower() \
                     and constant.PR_SEARCH_TERM in str(entry.content[0]['value']).lower():
-                data.setdefault('title', [])
-                data.setdefault('content', [])
-                data.setdefault('link', [])
-                data['title'].append(entry.title)
-                data['content'].append(entry.content)
-                data['link'].append(entry.link)
-        return data
+
+                entry_list.append({
+                    'title': entry.title,
+                    'content': entry.content,
+                    'link': entry.link
+                })
+
+        return entry_list
 
     except ConnectionResetError:
         print("connection err")  # Needs proper logging
