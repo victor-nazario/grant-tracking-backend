@@ -4,6 +4,7 @@ import schedule
 import pickle
 
 
+
 def make_pull(url: str) -> {}:
     """
     make_pull receives a URL linking to an RSS feed with relevant grant data to be acquired.
