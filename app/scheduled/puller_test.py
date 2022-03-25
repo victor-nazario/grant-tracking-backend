@@ -13,8 +13,8 @@ class ModelsTestCase(unittest.TestCase):
     def test_make_pull(self):
         assert len(make_pull(constant.RSS_FEED_NEW_OP)['title'][0]) > 0, "Length of returned list should be greater than 0"
 
-
     def test_ingestion(self):
+        init_db()
         file_name = 'mypickle.pk'
         with open(file_name, 'wb') as etag_file:
             # dump your data into the file
@@ -37,10 +37,14 @@ class ModelsTestCase(unittest.TestCase):
         self.assertTrue(len(result) > 0)
         print(result)
 
+    '''Make sure the db contains data before running. 
+    Run test_ingestion if db is empty'''
     def test_select_all_grant_titles(self):
         statement = select(GrantEntry.title)
         session = db_session()
-        print(session.execute(statement).all())
+        result = session.execute(statement).all()
+        print(result)
+        self.assertTrue(len(result) > 0)
 
 
 if __name__ == '__main__':
