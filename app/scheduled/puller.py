@@ -1,5 +1,5 @@
 import feedparser
-import constant
+from app.scheduled import constant
 import schedule
 import pickle
 
@@ -53,19 +53,19 @@ def job():
 
 
 def job2():
-    print(len(make_pull(constant.RSS_FEED_MOD_OP)))
-
-
-if __name__ == '__main__':
     feedparser.USER_AGENT = constant.USER_AGENT
-
     # open a pickle file
     filename = 'mypickle.pk'
     with open(filename, 'wb') as file:
         # dump your data into the file
         pickle.dump('', file)
+    print(len(make_pull(constant.RSS_FEED_MOD_OP)))
 
-    schedule.every(10).seconds.do(job2)
 
-    while True:
-        schedule.run_pending()
+# if __name__ == '__main__':
+
+
+# schedule.every(10).seconds.do(job2)
+
+#while True:
+    #schedule.run_pending()

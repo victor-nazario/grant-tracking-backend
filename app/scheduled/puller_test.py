@@ -25,7 +25,7 @@ class ModelsTestCase(unittest.TestCase):
 
         for entry in entry_list:
             grant_list.append(GrantEntry(title=entry['title'], content=entry['content'][0]['value'],
-                                         link=entry['link'], close_date=datetime.datetime(2022, 8, 20),
+                                         link=entry['link'], close_date=date(2022, 8, 20),
                                          modified=True, etag=''))
         some_session = db_session()
         with some_session as session:

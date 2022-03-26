@@ -1,6 +1,6 @@
-from models import db_session, GrantEntry, init_db
+from models import db_session, GrantEntry
 from processing import obtain_close_date
-from datetime import datetime, date
+from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 
 
@@ -20,7 +20,18 @@ def create_grants_from_entries(entry_list: list):
             close_date = date.today() + relativedelta(months=6)
 
         grant_list.append(GrantEntry(title=entry['title'], content=entry_content,
-                                     link=entry['link'], close_date=close_date.strftime('%b %d, %Y'),
+                                     link=entry['link'], close_date=close_date,
                                      modified=True, etag=''))
 
     return grant_list
+
+
+def insert_grants(grant_list: list):
+    """
+    Inserts a list of GrantEntry objects into the database.
+    :param grant_list: list
+    """
+    some_session = db_session()
+    with some_session as session:
+        session.add_all(grant_list)
+        session.commit()
