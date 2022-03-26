@@ -11,7 +11,7 @@ db_settings = {
     'DATABASE_CONNECT_OPTIONS': ''
 }
 
-Model = declarative_base()
+Base = declarative_base()
 
 engine = create_engine(db_settings['DATABASE_URI'], convert_unicode=True, echo=True)
 
@@ -22,10 +22,10 @@ db_session = scoped_session(sessionmaker(autocommit=False,
 
 
 def init_db():
-    Model.metadata.create_all(bind=engine)
+    Base.metadata.create_all(bind=engine)
 
 
-class GrantEntry(Model):
+class GrantEntry(Base):
     __tablename__ = 'entries'
     id = Column("id", Integer, primary_key=True)
     title = Column("title", String(75))
