@@ -1,7 +1,8 @@
-import feedparser
-from app.scheduled import constant
-import schedule
 import pickle
+
+import feedparser
+
+from app.scheduled import constant
 
 
 def make_pull(url: str) -> []:
@@ -46,26 +47,3 @@ def make_pull(url: str) -> []:
     except ConnectionResetError:
         print("connection err")  # Needs proper logging
         return {}
-
-
-def job():
-    print('example')
-
-
-def job2():
-    feedparser.USER_AGENT = constant.USER_AGENT
-    # open a pickle file
-    filename = 'mypickle.pk'
-    with open(filename, 'wb') as file:
-        # dump your data into the file
-        pickle.dump('', file)
-    print(len(make_pull(constant.RSS_FEED_MOD_OP)))
-
-
-# if __name__ == '__main__':
-
-
-# schedule.every(10).seconds.do(job2)
-
-#while True:
-    #schedule.run_pending()
