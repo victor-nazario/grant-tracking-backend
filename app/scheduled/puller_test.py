@@ -11,16 +11,14 @@ import unittest
 class ModelsTestCase(unittest.TestCase):
 
     def test_make_pull(self):
-        generate_random_etag()
-        result = make_pull(constant.RSS_FEED_NEW_OP)
+        result = make_pull(constant.RSS_FEED_NEW_OP, generate_random_etag())
         self.assertTrue(len(result) > 0, "Length of returned list should be greater than 0")
         print(result)
         print(len(result))
 
     def test_ingestion(self):
         init_db()
-        generate_random_etag()
-        entry_list = make_pull(constant.RSS_FEED_NEW_OP)
+        entry_list = make_pull(constant.RSS_FEED_NEW_OP, generate_random_etag())
         grant_list = []
 
         for entry in entry_list:
