@@ -2,10 +2,7 @@ from datetime import datetime
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean, MetaData
 from sqlalchemy.orm import scoped_session, sessionmaker, declarative_base
 import psycopg2
-import os
 
-# BASE_DIR = os.path.dirname(os.path.realpath(__file__))
-# path = 'sqlite:///' + os.path.join(BASE_DIR, 'site.db')
 
 db_settings = {
     'DATABASE_URI': 'postgresql+psycopg2://root:root@localhost:5432/test_db',
@@ -29,7 +26,7 @@ def init_db():
 class GrantEntry(Base):
     __tablename__ = 'entries'
     id = Column("id", Integer, primary_key=True)
-    title = Column("title", String(150))
+    title = Column("title", String)
     content = Column("content", String)
     link = Column("link", String(150), unique=True)
     close_date = Column(DateTime)

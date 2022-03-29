@@ -19,8 +19,7 @@ class PersistenceTestCase(unittest.TestCase):
 
     def test_insert_grants(self):
         init_db()
-        generate_random_etag()
-        entry_list = make_pull(constant.RSS_FEED_NEW_OP)
+        entry_list = make_pull(constant.RSS_FEED_NEW_OP, generate_random_etag())
         grant_list = create_grants_from_entries(entry_list)
         insert_grants(grant_list)
         session = db_session()
