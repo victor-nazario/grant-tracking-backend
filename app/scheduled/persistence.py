@@ -21,7 +21,7 @@ def create_grants_from_entries(entry_list: list):
 
         grant_list.append(GrantEntry(title=entry['title'], content=entry_content,
                                      link=entry['link'], close_date=close_date,
-                                     modified=True, etag=''))
+                                     modified=True, etag=entry['etag']))
 
     return grant_list
 

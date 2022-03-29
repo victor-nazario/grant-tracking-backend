@@ -17,6 +17,8 @@ class PersistenceTestCase(unittest.TestCase):
         print(grant_list)
         return grant_list
 
+    '''This test may return an error if make_pull has a connection_error or a 304 return status.
+    We have to make sure catch this error.'''
     def test_insert_grants(self):
         init_db()
         entry_list = make_pull(constant.RSS_FEED_NEW_OP, generate_random_etag())

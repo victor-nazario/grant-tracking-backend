@@ -30,7 +30,8 @@ def make_pull(url: str, previous_etag: str) -> []:
                 entry_list.append({
                     'title': entry.title,
                     'content': entry.content,
-                    'link': entry.link
+                    'link': entry.link,
+                    'etag': feed.etag
                 })
 
         return entry_list
