@@ -4,7 +4,7 @@ from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 
 
-def create_grants_from_entries(entry_list: list):
+def create_grants_from_entries(entry_list: list, is_modified: bool):
     """
     Creates a list of GrantEntry objects from a list of entries. Each entry contains the title,
     the content, and the link for each grant.
@@ -21,7 +21,7 @@ def create_grants_from_entries(entry_list: list):
 
         grant_list.append(GrantEntry(title=entry['title'], content=entry_content,
                                      link=entry['link'], close_date=close_date,
-                                     modified=True, etag=entry['etag']))
+                                     modified=is_modified, etag=entry['etag']))
 
     return grant_list
 

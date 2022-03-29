@@ -12,7 +12,7 @@ class PersistenceTestCase(unittest.TestCase):
     def test_convert_to_grant(self):
         generate_random_etag()
         entry_list = make_pull(constant.RSS_FEED_NEW_OP)
-        grant_list = create_grants_from_entries(entry_list)
+        grant_list = create_grants_from_entries(entry_list, False)
         self.assertTrue(len(entry_list) == len(grant_list))
         print(grant_list)
         return grant_list
@@ -22,7 +22,7 @@ class PersistenceTestCase(unittest.TestCase):
     def test_insert_grants(self):
         init_db()
         entry_list = make_pull(constant.RSS_FEED_NEW_OP, generate_random_etag())
-        grant_list = create_grants_from_entries(entry_list)
+        grant_list = create_grants_from_entries(entry_list, False)
         insert_grants(grant_list)
         session = db_session()
         statement = select(GrantEntry.close_date)
