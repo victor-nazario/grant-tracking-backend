@@ -33,6 +33,13 @@ def initiate_pull_and_process_layers():
 
 
 def _pull_and_persist(url: str, last_etag: str, is_modified: bool):
+    """
+    This function is called from initiate_pull_and_process_layers to pull and persist the data
+    for each RSS Feed.
+    :param url: string containing the url for the RSS Feed
+    :param last_etag: the last etag stored in the database for a specific feed
+    :param is_modified: True for modified grants, False otherwise
+    """
     entry_list = make_pull(url, last_etag)
     if entry_list == 304:
         print("New RSS Feed is the same")
