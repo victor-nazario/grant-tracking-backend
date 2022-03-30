@@ -36,4 +36,4 @@ def make_pull(url: str, previous_etag: str) -> []:
 
     except ConnectionResetError:
         print("connection err")  # Needs proper logging
-        return {}
+        return []

@@ -4,7 +4,7 @@ from datetime import date
 from sqlalchemy import select
 
 import constant
-from models import db_session, GrantEntry, init_db
+from models import db_session, GrantEntry, init_db, get_session
 from puller import make_pull
 from test_utils import generate_random_etag
 
@@ -35,7 +35,7 @@ class ModelsTestCase(unittest.TestCase):
                                              link=entry['link'], close_date=date(2022, 8, 20),
                                              modified=True, etag=entry['etag']))
 
-        some_session = db_session()
+        some_session = get_session()
         with some_session as session:
             session.add_all(grant_list)
             session.add_all(grant_list_mod)

@@ -5,6 +5,7 @@ from sqlalchemy import desc
 import constant
 from models import db_session, GrantEntry
 from puller import make_pull
+from persistence import create_grants_from_entries, insert_grants
 
 
 def initiate_pull_and_process_layers():
@@ -22,6 +23,21 @@ def initiate_pull_and_process_layers():
             print("had err")
             last_new_entry = ''
             last_mod_entry = ''
+        except AttributeError:
+            print("had err")
+            last_new_entry = ''
+            last_mod_entry = ''
 
-    print(len(make_pull(constant.RSS_FEED_NEW_OP, last_new_entry)))
-    print(len(make_pull(constant.RSS_FEED_MOD_OP, last_mod_entry)))
+    _pull_and_persist(constant.RSS_FEED_NEW_OP, last_new_entry, False)
+    _pull_and_persist(constant.RSS_FEED_MOD_OP, last_mod_entry, True)
+
+
+def _pull_and_persist(url: str, last_etag: str, is_modified: bool):
+    entry_list = make_pull(url, last_etag)
+    if entry_list == 304:
+        print("New RSS Feed is the same")
+    elif len(entry_list) == 0:
+        print("Connection error")
+    else:
+        grant_list = create_grants_from_entries(entry_list, is_modified)
+        insert_grants(grant_list)
