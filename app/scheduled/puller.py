@@ -18,7 +18,7 @@ def make_pull(url: str, previous_etag: str) -> []:
         if feed.status == 304:
             print(feed.status)
             print(feed.etag)
-            return feed.feed
+            return 304
 
         entry_list = []
 
@@ -35,5 +35,4 @@ def make_pull(url: str, previous_etag: str) -> []:
         return entry_list
 
     except ConnectionResetError:
-        print("connection err")  # Needs proper logging
         return []

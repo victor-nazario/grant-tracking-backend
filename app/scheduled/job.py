@@ -42,7 +42,7 @@ def _pull_and_persist(url: str, last_etag: str, is_modified: bool):
     """
     entry_list = make_pull(url, last_etag)
     if entry_list == 304:
-        print("New RSS Feed is the same")
+        print("RSS Feed is the same")
     elif len(entry_list) == 0:
         print("Connection error")
     else:
