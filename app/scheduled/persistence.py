@@ -1,7 +1,8 @@
-from models import db_session, GrantEntry
+from models import db_session, GrantEntry, get_session
 from processing import obtain_close_date
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
+from sqlalchemy import select
 
 
 def create_grants_from_entries(entry_list: list, is_modified: bool):
@@ -31,7 +32,7 @@ def insert_grants(grant_list: list):
     Inserts a list of GrantEntry objects into the database.
     :param grant_list: list
     """
-    some_session = db_session()
+    some_session = get_session()
     with some_session as session:
         session.add_all(grant_list)
         session.commit()

@@ -24,11 +24,12 @@ class ModelsTestCase(unittest.TestCase):
         for entry in entry_list:
             grant_list.append(GrantEntry(title=entry['title'], content=entry['content'][0]['value'],
                                          link=entry['link'], close_date=date(2022, 8, 20),
-                                         modified=True, etag=''))
+                                         modified=False, etag=''))
         some_session = get_session()
         with some_session as session:
             session.add_all(grant_list)
             session.commit()
+        session.close()
         statement = select(GrantEntry.title)
         result = session.execute(statement).all()
         self.assertTrue(len(result) > 0)
