@@ -8,6 +8,7 @@ def create_grants_from_entries(entry_list: list, is_modified: bool):
     """
     Creates a list of GrantEntry objects from a list of entries. Each entry contains the title,
     the content, and the link for each grant.
+    :param is_modified: if the entry_list contains modified entries or not
     :return list of GrantEntry objects
     :param entry_list: list
     """

@@ -1,8 +1,7 @@
 from datetime import datetime
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean, MetaData
-from sqlalchemy.orm import scoped_session, sessionmaker, declarative_base
-import psycopg2
 
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean
+from sqlalchemy.orm import scoped_session, sessionmaker, declarative_base
 
 db_settings = {
     'DATABASE_URI': 'postgresql+psycopg2://root:root@localhost:5432/test_db',
@@ -28,7 +27,7 @@ class GrantEntry(Base):
     id = Column("id", Integer, primary_key=True)
     title = Column("title", String)
     content = Column("content", String)
-    link = Column("link", String(150), unique=True)
+    link = Column("link", String(150))
     close_date = Column(DateTime)
     modified = Column(Boolean)
     etag = Column("etag", String(35))

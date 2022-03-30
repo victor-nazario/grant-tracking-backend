@@ -1,5 +1,3 @@
-import pickle
-
 import feedparser
 
 from app.scheduled import constant
