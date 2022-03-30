@@ -1,5 +1,5 @@
 from puller import make_pull
-from models import db_session, GrantEntry, init_db
+from models import db_session, GrantEntry, init_db, get_session
 from datetime import datetime, date
 from sqlalchemy import select
 from test_utils import generate_random_string, generate_random_etag
@@ -25,7 +25,7 @@ class ModelsTestCase(unittest.TestCase):
             grant_list.append(GrantEntry(title=entry['title'], content=entry['content'][0]['value'],
                                          link=entry['link'], close_date=date(2022, 8, 20),
                                          modified=True, etag=''))
-        some_session = db_session()
+        some_session = get_session()
         with some_session as session:
             session.add_all(grant_list)
             session.commit()
@@ -38,8 +38,9 @@ class ModelsTestCase(unittest.TestCase):
     Run test_ingestion if db is empty'''
     def test_select_all_grant_titles(self):
         statement = select(GrantEntry.title, GrantEntry.content, GrantEntry.link)
-        session = db_session()
+        session = get_session()
         result = session.execute(statement).all()
+        session.close()
         print(result)
         self.assertTrue(len(result) > 0)
 

@@ -4,7 +4,7 @@ import constant
 from puller import make_pull
 from test_utils import generate_random_etag
 from sqlalchemy import select
-from models import GrantEntry, db_session, init_db
+from models import GrantEntry, db_session, init_db, get_session
 
 
 class PersistenceTestCase(unittest.TestCase):
@@ -24,9 +24,21 @@ class PersistenceTestCase(unittest.TestCase):
         entry_list = make_pull(constant.RSS_FEED_NEW_OP, generate_random_etag())
         grant_list = create_grants_from_entries(entry_list, False)
         insert_grants(grant_list)
-        session = db_session()
+        session = get_session()
+        statement = select(GrantEntry.close_date)
+        result = session.execute(statement).all()
+        session.close()
+        self.assertTrue(len(result) > 0)
+        print(result)
+
+    def test_closing_session(self):
+        session = get_session()
         statement = select(GrantEntry.close_date)
         result = session.execute(statement).all()
         self.assertTrue(len(result) > 0)
+        session.close()
+        statement = select(GrantEntry.title)
+        result = session.execute(statement)
         print(result)
+
 
