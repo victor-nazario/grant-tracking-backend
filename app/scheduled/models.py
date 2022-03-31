@@ -32,7 +32,7 @@ def _get_engine(uri: str):
     url = uri
     if not database_exists(url):
         create_database(url, 'entries')
-    new_engine = create_engine(url, pool_size=50, echo=True)
+    new_engine = create_engine(url, pool_size=50, echo=False)
     return new_engine
 
 
