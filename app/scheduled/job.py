@@ -22,14 +22,20 @@ def initiate_pull_and_process_layers():
     with session_from_model as session:
         try:
             last_new_entry = session.query(GrantEntry).filter_by(modified=False).order_by(desc('id')).first().etag
+        except sqlalchemy.exc.ProgrammingError:
+            logging.info('Entered PROGRAMMING error handling NEW feed')
+            last_new_entry = ''
+        except AttributeError:
+            logging.info('Entered ATTRIBUTE error handling NEW feed')
+            last_new_entry = ''
+
+        try:
             last_mod_entry = session.query(GrantEntry).filter_by(modified=True).order_by(desc('id')).first().etag
         except sqlalchemy.exc.ProgrammingError:
-            logging.info('Entered PROGRAMMING error handling')
-            last_new_entry = ''
+            logging.info('Entered PROGRAMMING error handling for MODIFIED feed')
             last_mod_entry = ''
         except AttributeError:
-            logging.info('Entered ATTRIBUTE error handling')
-            last_new_entry = ''
+            logging.info('Entered ATTRIBUTE error handling MODIFIED feed')
             last_mod_entry = ''
 
     _pull_and_persist(constant.RSS_FEED_NEW_OP, last_new_entry, False)
