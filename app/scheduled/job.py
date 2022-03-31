@@ -8,7 +8,6 @@ from puller import make_pull
 from persistence import create_grants_from_entries, insert_grants
 
 
-
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s-%(message)s')
 
@@ -25,11 +24,11 @@ def initiate_pull_and_process_layers():
             last_new_entry = session.query(GrantEntry).filter_by(modified=False).order_by(desc('id')).first().etag
             last_mod_entry = session.query(GrantEntry).filter_by(modified=True).order_by(desc('id')).first().etag
         except sqlalchemy.exc.ProgrammingError:
-            print("had err")
+            logging.info('Entered PROGRAMMING error handling')
             last_new_entry = ''
             last_mod_entry = ''
         except AttributeError:
-            print("had err")
+            logging.info('Entered ATTRIBUTE error handling')
             last_new_entry = ''
             last_mod_entry = ''
 
