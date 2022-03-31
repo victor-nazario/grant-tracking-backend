@@ -56,3 +56,4 @@ def _pull_and_persist(url: str, last_etag: str, is_modified: bool):
     else:
         grant_list = create_grants_from_entries(entry_list, is_modified)
         insert_grants(grant_list)
+        logging.info('Inserted ' + feed_type + ' grants into database')
