@@ -4,6 +4,10 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s-%(message)s')
+"""
+Delete grant from database if present date time exceeds the close date of the grant.
+"""
+
 
 def delete_grant():
     session = get_session()

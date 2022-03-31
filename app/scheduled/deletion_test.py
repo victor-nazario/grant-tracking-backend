@@ -1,6 +1,6 @@
 import unittest
 
-from models import GrantEntry, db_session, init_db
+from models import GrantEntry, init_db, get_session
 
 from app.scheduled.deletion import delete_grant
 from app.scheduled.models import GrantEntry
@@ -11,7 +11,7 @@ import datetime
 class DeletionTestCase(unittest.TestCase):
 
     def test_deletion(self):
-        session = db_session()
+        session = get_session()
         session.add(GrantEntry(title="Monday", content="ehfjkewhfkjewhjkeh448", link="www.grant1.com",
                                close_date=datetime.datetime(2021, 10, 20), etag="", modified=True))
         session.add(GrantEntry(title="Tuesday", content="sasasasasasasa", link="www.grant2.com",
@@ -25,10 +25,9 @@ class DeletionTestCase(unittest.TestCase):
         before_delete = session.query(GrantEntry).count()
         print("Before Delete:")
         print(before_delete)
-
+        session.close()
         delete_grant()
 
-        session.commit()
         after_delete = session.query(GrantEntry).count()
         print("After Delete:")
         print(after_delete)
