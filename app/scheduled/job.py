@@ -6,7 +6,7 @@ import constant
 from models import db_session, GrantEntry
 from puller import make_pull
 from persistence import create_grants_from_entries, insert_grants
-from logging_utils.logging_formater import CustomFormatter
+
 
 
 logging.basicConfig(level=logging.DEBUG,
