@@ -14,12 +14,12 @@ db_settings = {
 
 Base = declarative_base()
 
-engine = create_engine(db_settings['DATABASE_URI'], convert_unicode=True, echo=True)
-
-
-db_session = scoped_session(sessionmaker(autocommit=False,
-                                         autoflush=False,
-                                         bind=engine))
+# engine = create_engine(db_settings['DATABASE_URI'], convert_unicode=True, echo=True)
+#
+#
+# db_session = scoped_session(sessionmaker(autocommit=False,
+#                                          autoflush=False,
+#                                          bind=engine))
 
 
 def _get_engine(uri: str):
@@ -32,7 +32,7 @@ def _get_engine(uri: str):
     url = uri
     if not database_exists(url):
         create_database(url, 'entries')
-    new_engine = create_engine(url, pool_size=50, echo=False)
+    new_engine = create_engine(url, pool_size=50, echo=False, echo_pool=False)
     return new_engine
 
 

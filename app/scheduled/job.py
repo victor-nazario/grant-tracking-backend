@@ -3,7 +3,7 @@ import sqlalchemy.exc
 from sqlalchemy import desc
 import logging
 import constant
-from models import db_session, GrantEntry
+from models import GrantEntry, get_session
 from puller import make_pull
 from persistence import create_grants_from_entries, insert_grants
 
@@ -18,7 +18,7 @@ def initiate_pull_and_process_layers():
     persistence, etc) and will be run a given amount of times per day.
     """
     feedparser.USER_AGENT = constant.USER_AGENT
-    session_from_model = db_session()
+    session_from_model = get_session()
     with session_from_model as session:
         try:
             last_new_entry = session.query(GrantEntry).filter_by(modified=False).order_by(desc('id')).first().etag
