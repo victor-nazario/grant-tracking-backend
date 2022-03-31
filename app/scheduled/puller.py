@@ -1,6 +1,7 @@
 import feedparser
+import logging
 
-from app.scheduled import constant
+import constant
 
 
 def make_pull(url: str, previous_etag: str) -> []:
@@ -16,8 +17,6 @@ def make_pull(url: str, previous_etag: str) -> []:
         feed = feedparser.parse(url, etag=previous_etag)
 
         if feed.status == 304:
-            print(feed.status)
-            print(feed.etag)
             return 304
 
         entry_list = []
