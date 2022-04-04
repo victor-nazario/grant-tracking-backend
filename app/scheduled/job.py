@@ -3,7 +3,8 @@ import sqlalchemy.exc
 from sqlalchemy import desc
 import logging
 import constant
-from models import GrantEntry, get_session
+from models import GrantEntry
+from app.session_generator.create_session import get_session
 from puller import make_pull
 from persistence import create_grants_from_entries, insert_grants
 

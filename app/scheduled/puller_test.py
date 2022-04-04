@@ -4,7 +4,8 @@ from datetime import date
 from sqlalchemy import select
 
 import constant
-from models import db_session, GrantEntry, init_db, get_session
+from models import GrantEntry, init_db
+from app.session_generator.create_session import get_session
 from puller import make_pull
 from test_utils import generate_random_etag
 

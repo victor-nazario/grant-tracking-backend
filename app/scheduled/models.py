@@ -1,54 +1,15 @@
 from datetime import datetime
-
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean
-from sqlalchemy.orm import scoped_session, sessionmaker, declarative_base
+from sqlalchemy.orm import declarative_base
 import psycopg2
-from sqlalchemy_utils import database_exists, create_database
+from app.session_generator.create_session import get_engine, db_settings
 
-
-
-db_settings = {
-    'DATABASE_URI': 'postgresql+psycopg2://root:root@localhost:5432/test_db',
-    'DATABASE_CONNECT_OPTIONS': ''
-}
 
 Base = declarative_base()
 
-# engine = create_engine(db_settings['DATABASE_URI'], convert_unicode=True, echo=True)
-#
-#
-# db_session = scoped_session(sessionmaker(autocommit=False,
-#                                          autoflush=False,
-#                                          bind=engine))
-
-
-def _get_engine(uri: str):
-    """
-    Checks if database exist before creating a new engine.
-    The function receives the database uri as an argument to create the engine.
-    :param uri: string
-    :return: a new engine
-    """
-    url = uri
-    if not database_exists(url):
-        create_database(url, 'entries')
-    new_engine = create_engine(url, pool_size=50, echo=False, echo_pool=False)
-    return new_engine
-
-
-def get_session():
-    """
-    This function creates new sessions after checking if the database exist by calling the function
-    _get_engine which returns a new engine to be used by the new session
-    :return: a new session
-    """
-    new_engine = _get_engine(db_settings['DATABASE_URI'])
-    session = sessionmaker(bind=new_engine)()
-    return session
-
 
 def init_db():
-    Base.metadata.create_all(bind=_get_engine(db_settings['DATABASE_URI']))
+    Base.metadata.create_all(bind=get_engine(db_settings['DATABASE_URI']))
 
 
 class GrantEntry(Base):

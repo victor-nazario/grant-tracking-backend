@@ -1,4 +1,5 @@
-from models import GrantEntry, get_session
+from models import GrantEntry
+from app.session_generator.create_session import get_session
 from processing import obtain_close_date
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
