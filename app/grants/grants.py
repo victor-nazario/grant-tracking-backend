@@ -1,4 +1,5 @@
 from flask import Blueprint
+from app.session_generator.create_session import get_engine
 
 grants_bp = Blueprint('grants', __name__)
 
