@@ -3,7 +3,7 @@ from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import declarative_base
 import psycopg2
 from app.session_generator.create_session import get_engine, db_settings
-
+from dataclasses import dataclass
 
 Base = declarative_base()
 
