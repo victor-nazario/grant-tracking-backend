@@ -8,7 +8,7 @@ from sqlalchemy import select
 from models import GrantEntry, init_db
 from app.session_generator.create_session import get_session
 from datetime import date
-
+import logging
 
 
 class PersistenceTestCase(unittest.TestCase):
@@ -35,15 +35,41 @@ class PersistenceTestCase(unittest.TestCase):
         print(result)
 
     def test_insert_if_unique(self):
-        # init_db()
+        init_db()
         random_etag = generate_random_string(20)
-        entry_list = make_pull(constant.RSS_FEED_NEW_OP, random_etag)
+        entry_list = make_pull(constant.RSS_FEED_NEW_OP, '')
         grant_list = []
         for entry in entry_list:
-            grant_list.append(GrantEntry(title=entry['title'], content=entry['content'][0]['value'],
-                                         link=entry['link'], close_date=date(2022, 8, 20),
-                                         modified=False, etag=random_etag))
+            grant_list.append(GrantEntry(title=entry['title'], opp_num=entry['opp_num'],
+                                         content=entry['content'][0]['value'], link=entry['link'],
+                                         close_date=date(2022, 8, 20), modified=False,
+                                         etag=random_etag))
         insert_grants_if_unique(grant_list)
+        grant_list_size = len(grant_list)
+        session = get_session()
+        inserted_list1 = session.execute(select(GrantEntry.etag)).all()
+        inserted_size = len(inserted_list1)
+        print("Inserted size: " + str(inserted_size))
+        print("grant_list_size: " + str(grant_list_size))
+        self.assertTrue(grant_list_size == inserted_size)
+        first_etag = inserted_list1[0][0]
+
+        random_etag2 = generate_random_string(20)
+        entry_list = make_pull(constant.RSS_FEED_NEW_OP, first_etag)
+        grant_list = []
+        for entry in entry_list:
+            grant_list.append(GrantEntry(title=entry['title'], opp_num=entry['opp_num'],
+                                         content=entry['content'][0]['value'], link=entry['link'],
+                                         close_date=date(2022, 8, 20), modified=False,
+                                         etag=random_etag2))
+        insert_grants_if_unique(grant_list)
+        inserted_list2 = session.execute(select(GrantEntry.etag)).all()
+        inserted_size2 = len(inserted_list2)
+        self.assertTrue(inserted_size2 == inserted_size)
+        second_etag = inserted_list2[0][0]
+        print("First Etag = " + first_etag)
+        print("Second Etag = " + second_etag)
+        self.assertFalse(first_etag == second_etag)
 
 
     def test_closing_session(self):
