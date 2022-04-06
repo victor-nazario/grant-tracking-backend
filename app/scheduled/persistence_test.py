@@ -3,12 +3,12 @@ from persistence import create_grants_from_entries, insert_grants, insert_grants
 import constant
 from puller import make_pull
 from sqlalchemy.engine import ChunkedIteratorResult
-from test_utils import generate_random_etag, generate_random_string
+from test_utils import generate_random_etag, generate_random_string, create_grant_objects
 from sqlalchemy import select
 from models import GrantEntry, init_db
 from app.session_generator.create_session import get_session
 from datetime import date
-import logging
+
 
 
 class PersistenceTestCase(unittest.TestCase):
@@ -70,7 +70,24 @@ class PersistenceTestCase(unittest.TestCase):
         print("First Etag = " + first_etag)
         print("Second Etag = " + second_etag)
         self.assertFalse(first_etag == second_etag)
+        return second_etag
 
+    def test_insert_if_modified(self):
+        result = create_grant_objects(constant.RSS_FEED_NEW_OP, '', False)
+        grant_list = result[0]
+        previous_etag = result[1]
+        insert_grants_if_unique(grant_list)
+        result = create_grant_objects(constant.RSS_FEED_NEW_OP, previous_etag, True)
+        grant_list = result[0]
+        previous_etag = result[1]
+        insert_grants_if_unique(grant_list)
+        result = create_grant_objects(constant.RSS_FEED_NEW_OP, previous_etag, False)
+        grant_list = result[0]
+        insert_grants_if_unique(grant_list)
+        session = get_session()
+        modified_list = session.execute(select(GrantEntry.modified)).all()
+        for modified in modified_list:
+            self.assertTrue(modified[0])
 
     def test_closing_session(self):
         session = get_session()
