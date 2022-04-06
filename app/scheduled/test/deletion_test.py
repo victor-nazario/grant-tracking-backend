@@ -1,9 +1,9 @@
 import unittest
 
-from models import GrantEntry, init_db, get_session
+from app.session_generator.create_session import get_session
 
-from app.scheduled.deletion import delete_grant
-from app.scheduled.models import GrantEntry
+from app.scheduled.layers.deletion import delete_grant
+from app.scheduled.layers.models import GrantEntry
 from datetime import datetime
 import datetime
 

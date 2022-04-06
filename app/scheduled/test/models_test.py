@@ -2,7 +2,8 @@ import unittest
 from datetime import datetime
 import datetime
 from sqlalchemy import select
-from models import GrantEntry, db_session, init_db
+from app.scheduled.layers.models import GrantEntry, init_db
+from app.session_generator import create_session
 
 
 class ModelsTestCase(unittest.TestCase):
@@ -27,7 +28,7 @@ class ModelsTestCase(unittest.TestCase):
 
     def test_session(self):
         init_db()
-        some_session = db_session()
+        some_session = create_session.get_session()
         with some_session as session:
             session.add(GrantEntry(title='Titl1', content='Some content', link='test11.com',
                                    close_date=datetime.datetime(2022, 8, 20), modified=True, etag='dsfasd'))

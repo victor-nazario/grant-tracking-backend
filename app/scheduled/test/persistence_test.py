@@ -1,11 +1,11 @@
 import unittest
-from persistence import create_grants_from_entries, insert_grants
-import constant
-from puller import make_pull
+from app.scheduled.layers.persistence import create_grants_from_entries, insert_grants
+from app.scheduled.layers import constant
+from app.scheduled.layers.puller import make_pull
 from sqlalchemy.engine import ChunkedIteratorResult
 from test_utils import generate_random_etag
 from sqlalchemy import select
-from models import GrantEntry, init_db
+from app.scheduled.layers.models import GrantEntry, init_db
 from app.session_generator.create_session import get_session
 
 

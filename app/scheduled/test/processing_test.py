@@ -1,4 +1,4 @@
-from processing import obtain_close_date
+from app.scheduled.layers.processing import obtain_close_date
 from datetime import datetime
 
 test_description = "<![CDATA[ <TABLE BORDER=0 WIDTH='100%'><TR><TD><table><tr><td>Funding Opportunity ID: " \

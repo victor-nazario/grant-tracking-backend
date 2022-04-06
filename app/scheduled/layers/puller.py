@@ -1,13 +1,12 @@
 import feedparser
-import logging
 
-import constant
+from app.scheduled.layers import constant
 
 
 def make_pull(url: str, previous_etag: str) -> []:
     """
     make_pull receives a URL linking to an RSS feed with relevant grant data to be acquired.
-    The obtained data is then filtered to only include grants relevant to Puerto Rico and
+    The obtained data is then filtered to only include api relevant to Puerto Rico and
     nonprofits. Returns a map with entries for the relevant columns, each containing a list of entries
     :param previous_etag: Str representing the prev. known etag of the RSS. Used to identify if feed is already parsed.
     :param url: The url where the feed to pull is available

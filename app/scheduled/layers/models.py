@@ -3,7 +3,7 @@ from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import declarative_base
 import psycopg2
 from app.session_generator.create_session import get_engine, db_settings
-from dataclasses import dataclass
+from marshmallow_sqlalchemy import SQLAlchemySchema, auto_field
 
 Base = declarative_base()
 
@@ -50,6 +50,19 @@ class GrantEntry(Base):
     def __eq__(self, other):
         return type(self) is type(other) and self.id == other.id
 
+
+class GrantEntrySchema(SQLAlchemySchema):
+    class Meta:
+        model = GrantEntry
+        load_instance = True
+
+    #id = auto_field()
+    title = auto_field()
+    #content = auto_field()
+    link = auto_field()
+    close_date = auto_field()
+    modified = auto_field()
+    #etag = auto_field()
 
 if __name__ == '__main__':
     init_db()

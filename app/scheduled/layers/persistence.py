@@ -1,9 +1,8 @@
-from models import GrantEntry
+from app.scheduled.layers.models import GrantEntry
 from app.session_generator.create_session import get_session
-from processing import obtain_close_date
-from datetime import date, datetime
+from app.scheduled.layers.processing import obtain_close_date
+from datetime import date
 from dateutil.relativedelta import relativedelta
-from sqlalchemy import select
 
 
 def create_grants_from_entries(entry_list: list, is_modified: bool):

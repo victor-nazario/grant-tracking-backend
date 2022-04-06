@@ -2,11 +2,11 @@ import feedparser
 import sqlalchemy.exc
 from sqlalchemy import desc
 import logging
-import constant
-from models import GrantEntry
+import app.scheduled.layers.constant as constant
+from app.scheduled.layers.models import GrantEntry
 from app.session_generator.create_session import get_session
-from puller import make_pull
-from persistence import create_grants_from_entries, insert_grants
+from app.scheduled.layers.puller import make_pull
+from app.scheduled.layers.persistence import create_grants_from_entries, insert_grants
 
 
 logging.basicConfig(level=logging.DEBUG,
@@ -49,7 +49,7 @@ def _pull_and_persist(url: str, last_etag: str, is_modified: bool):
     for each RSS Feed.
     :param url: string containing the url for the RSS Feed
     :param last_etag: the last etag stored in the database for a specific feed
-    :param is_modified: True for modified grants, False otherwise
+    :param is_modified: True for modified api, False otherwise
     """
     entry_list = make_pull(url, last_etag)
     feed_type = "MODIFIED" if is_modified else "NEW"
@@ -62,4 +62,4 @@ def _pull_and_persist(url: str, last_etag: str, is_modified: bool):
     else:
         grant_list = create_grants_from_entries(entry_list, is_modified)
         insert_grants(grant_list)
-        logging.info('Inserted ' + feed_type + ' grants into database')
+        logging.info('Inserted ' + feed_type + ' api into database')

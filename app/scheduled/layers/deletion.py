@@ -1,4 +1,4 @@
-from app.scheduled.models import GrantEntry
+from app.scheduled.layers.models import GrantEntry
 from app.session_generator.create_session import get_session
 from datetime import datetime
 import logging

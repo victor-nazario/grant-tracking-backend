@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask
-from app.grants.grants import grants_bp
+from app.api.grants import grants_bp
 
 
 def create_app(test_config=None):
