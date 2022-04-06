@@ -3,12 +3,11 @@ from app.scheduled.layers.persistence import create_grants_from_entries, insert_
 from app.scheduled.layers import constant
 from app.scheduled.layers.puller import make_pull
 from sqlalchemy.engine import ChunkedIteratorResult
-from test_utils import generate_random_etag, generate_random_string, create_grant_objects
+from app.scheduled.test.test_utils import generate_random_etag, generate_random_string, create_grant_objects
 from sqlalchemy import select
 from app.scheduled.layers.models import GrantEntry, init_db
 from app.session_generator.create_session import get_session
 from datetime import date
-
 
 
 class PersistenceTestCase(unittest.TestCase):

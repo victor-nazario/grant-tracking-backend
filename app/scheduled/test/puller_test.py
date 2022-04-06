@@ -7,7 +7,7 @@ from app.scheduled.layers import constant
 from app.scheduled.layers.models import GrantEntry, init_db
 from app.session_generator.create_session import get_session
 from app.scheduled.layers.puller import make_pull
-from test_utils import generate_random_etag
+from app.scheduled.test.test_utils import generate_random_etag
 
 
 class ModelsTestCase(unittest.TestCase):
