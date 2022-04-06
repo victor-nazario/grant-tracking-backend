@@ -16,19 +16,22 @@ class GrantEntry(Base):
     __tablename__ = 'entries'
     id = Column("id", Integer, primary_key=True)
     title = Column("title", String)
+    opp_num = Column("opp_num", String(50), unique=True)
     content = Column("content", String)
     link = Column("link", String(150))
     close_date = Column(DateTime)
     modified = Column(Boolean)
     etag = Column("etag", String(35))
 
-    def __init__(self, title, content, link, close_date, etag, modified):
+    def __init__(self, title, content, link, close_date, etag, modified, opp_num):
         self.title = title
+        self.opp_num = opp_num
         self.content = content
         self.link = link
         self.close_date = close_date
         self.modified = modified
         self.etag = etag
+
 
     @property
     def accepts_submission(self) -> bool:

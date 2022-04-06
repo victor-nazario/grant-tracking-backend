@@ -1,6 +1,10 @@
 import string
 import random
 import pickle
+from puller import make_pull
+from datetime import date
+from models import GrantEntry
+
 
 
 def generate_random_string(num_characters: int) -> str:
@@ -22,3 +26,17 @@ def generate_random_etag() -> str:
     with open(file_name, 'wb') as etag_file:
         # dump your data into the file
         pickle.dump(generate_random_string(20), etag_file)
+
+
+def create_grant_objects(url: str, previous_etag: str, is_modified: bool):
+    random_etag = generate_random_string(20)
+    entry_list = []
+    while len(entry_list) <= 0:
+        entry_list = make_pull(url, previous_etag)
+    grant_list = []
+    for entry in entry_list:
+        grant_list.append(GrantEntry(title=entry['title'], opp_num=entry['opp_num'],
+                                     content=entry['content'][0]['value'], link=entry['link'],
+                                     close_date=date(2022, 8, 20), modified=is_modified,
+                                     etag=random_etag))
+    return grant_list, random_etag
