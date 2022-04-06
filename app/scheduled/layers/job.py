@@ -6,7 +6,7 @@ import app.scheduled.layers.constant as constant
 from app.scheduled.layers.models import GrantEntry
 from app.session_generator.create_session import get_session
 from app.scheduled.layers.puller import make_pull
-from app.scheduled.layers.persistence import create_grants_from_entries, insert_grants, insert_grants_if_unique
+from app.scheduled.layers.persistence import create_grants_from_entries, insert_grants_if_unique
 
 
 logging.basicConfig(level=logging.DEBUG,

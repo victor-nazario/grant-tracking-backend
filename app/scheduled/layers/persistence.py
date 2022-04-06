@@ -30,18 +30,16 @@ def create_grants_from_entries(entry_list: list, is_modified: bool):
     return grant_list
 
 
-def insert_grants(grant_list: list):
-    """
-    Inserts a list of GrantEntry objects into the database.
-    :param grant_list: list
-    """
-    some_session = get_session()
-    with some_session as session:
-        session.add_all(grant_list)
-        session.commit()
-
-
 def insert_grants_if_unique(grant_list: list):
+    """
+    Insert grants in database if their opportunity number does not exist already in the database,
+    otherwise, updates de current grant with the new data. The function calls the private function
+    _insert_modified_grants, if the list grant_list contains a list of modified grants. This is,
+    if the modified property is 'True'. If the modified property is 'False', the _insert_new_grants
+    function will be called.
+    :param grant_list: list of GrantEntry objects
+    """
+    # if grant is modified
     if grant_list[0].modified:
         _insert_modified_grants(grant_list)
     else:
@@ -49,6 +47,12 @@ def insert_grants_if_unique(grant_list: list):
 
 
 def _insert_modified_grants(grant_list: list):
+    """
+    This functions is called from the insert_grants_if_unique function. It inserts or updates
+    grants from the modified RSS feed. Also, updates the modified property to true for grants already
+    in the database if the property if set to 'False'.
+    :param grant_list: list og GrantEntry objects
+    """
     session = get_session()
     for grant in grant_list:
         insert_stmt = insert(GrantEntry).values(
@@ -80,6 +84,11 @@ def _insert_modified_grants(grant_list: list):
 
 
 def _insert_new_grants(grant_list: list):
+    """
+    This functions is called from the insert_grants_if_unique function. It inserts or updates
+    grants from the New RSS feed into the database.
+    :param grant_list: list of GrantEntry objects
+    """
     session = get_session()
     for grant in grant_list:
         insert_stmt = insert(GrantEntry).values(
@@ -100,7 +109,6 @@ def _insert_new_grants(grant_list: list):
                 content=grant.content,
                 link=grant.link,
                 close_date=grant.close_date,
-                # modified=grant.modified,
                 etag=grant.etag
             )
         )
