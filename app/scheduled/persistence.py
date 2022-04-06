@@ -3,7 +3,7 @@ from app.session_generator.create_session import get_session
 from processing import obtain_close_date
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
-from sqlalchemy import select
+from sqlalchemy.dialects.postgresql import insert
 
 
 def create_grants_from_entries(entry_list: list, is_modified: bool):
@@ -22,9 +22,10 @@ def create_grants_from_entries(entry_list: list, is_modified: bool):
         if close_date is None:
             close_date = date.today() + relativedelta(months=6)
 
-        grant_list.append(GrantEntry(title=entry['title'], content=entry_content,
-                                     link=entry['link'], close_date=close_date,
-                                     modified=is_modified, etag=entry['etag']))
+        grant_list.append(GrantEntry(title=entry['title'], opp_num=entry['opp_num'],
+                                     content=entry_content, link=entry['link'],
+                                     close_date=close_date, modified=is_modified,
+                                     etag=entry['etag']))
 
     return grant_list
 
@@ -38,3 +39,72 @@ def insert_grants(grant_list: list):
     with some_session as session:
         session.add_all(grant_list)
         session.commit()
+
+
+def insert_grants_if_unique(grant_list: list):
+    if grant_list[0].modified:
+        _insert_modified_grants(grant_list)
+    else:
+        _insert_new_grants(grant_list)
+
+
+def _insert_modified_grants(grant_list: list):
+    session = get_session()
+    for grant in grant_list:
+        insert_stmt = insert(GrantEntry).values(
+            title=grant.title,
+            opp_num=grant.opp_num,
+            content=grant.content,
+            link=grant.link,
+            close_date=grant.close_date,
+            modified=grant.modified,
+            etag=grant.etag
+        )
+
+        do_update_stmt = insert_stmt.on_conflict_do_update(
+            constraint='entries_opp_num_key',
+            set_=dict(
+                title=grant.title,
+                opp_num=grant.opp_num,
+                content=grant.content,
+                link=grant.link,
+                close_date=grant.close_date,
+                modified=grant.modified,
+                etag=grant.etag
+            )
+        )
+        session.execute(do_update_stmt)
+
+    session.commit()
+    session.close()
+
+
+def _insert_new_grants(grant_list: list):
+    session = get_session()
+    for grant in grant_list:
+        insert_stmt = insert(GrantEntry).values(
+            title=grant.title,
+            opp_num=grant.opp_num,
+            content=grant.content,
+            link=grant.link,
+            close_date=grant.close_date,
+            modified=grant.modified,
+            etag=grant.etag
+        )
+
+        do_update_stmt = insert_stmt.on_conflict_do_update(
+            constraint='entries_opp_num_key',
+            set_=dict(
+                title=grant.title,
+                opp_num=grant.opp_num,
+                content=grant.content,
+                link=grant.link,
+                close_date=grant.close_date,
+                # modified=grant.modified,
+                etag=grant.etag
+            )
+        )
+        session.execute(do_update_stmt)
+
+    session.commit()
+    session.close()

@@ -1,12 +1,14 @@
 import unittest
-from persistence import create_grants_from_entries, insert_grants
+from persistence import create_grants_from_entries, insert_grants, insert_grants_if_unique
 import constant
 from puller import make_pull
 from sqlalchemy.engine import ChunkedIteratorResult
-from test_utils import generate_random_etag
+from test_utils import generate_random_etag, generate_random_string
 from sqlalchemy import select
 from models import GrantEntry, init_db
 from app.session_generator.create_session import get_session
+from datetime import date
+
 
 
 class PersistenceTestCase(unittest.TestCase):
@@ -31,6 +33,18 @@ class PersistenceTestCase(unittest.TestCase):
         session.close()
         self.assertTrue(len(result) > 0)
         print(result)
+
+    def test_insert_if_unique(self):
+        # init_db()
+        random_etag = generate_random_string(20)
+        entry_list = make_pull(constant.RSS_FEED_NEW_OP, random_etag)
+        grant_list = []
+        for entry in entry_list:
+            grant_list.append(GrantEntry(title=entry['title'], content=entry['content'][0]['value'],
+                                         link=entry['link'], close_date=date(2022, 8, 20),
+                                         modified=False, etag=random_etag))
+        insert_grants_if_unique(grant_list)
+
 
     def test_closing_session(self):
         session = get_session()

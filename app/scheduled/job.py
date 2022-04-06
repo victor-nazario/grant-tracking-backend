@@ -6,7 +6,7 @@ import constant
 from models import GrantEntry
 from app.session_generator.create_session import get_session
 from puller import make_pull
-from persistence import create_grants_from_entries, insert_grants
+from persistence import create_grants_from_entries, insert_grants, insert_grants_if_unique
 
 
 logging.basicConfig(level=logging.DEBUG,
@@ -39,8 +39,13 @@ def initiate_pull_and_process_layers():
             logging.info('Entered ATTRIBUTE error handling MODIFIED feed')
             last_mod_entry = ''
 
-    _pull_and_persist(constant.RSS_FEED_NEW_OP, last_new_entry, False)
-    _pull_and_persist(constant.RSS_FEED_MOD_OP, last_mod_entry, True)
+    result = False
+    while not result:
+        result = _pull_and_persist(constant.RSS_FEED_NEW_OP, last_new_entry, False)
+
+    result = False
+    while not result:
+        result = _pull_and_persist(constant.RSS_FEED_MOD_OP, last_mod_entry, True)
 
 
 def _pull_and_persist(url: str, last_etag: str, is_modified: bool):
@@ -56,10 +61,13 @@ def _pull_and_persist(url: str, last_etag: str, is_modified: bool):
     if entry_list == 304:
         print('\n')
         logging.info('Status 304: RSS feed is the same for ' + feed_type + ' opportunities')
+        return True
     elif len(entry_list) == 0:
         print('\n')
         logging.info('Could not connect to ' + feed_type + ' opportunities RSS feed')
+        return False
     else:
         grant_list = create_grants_from_entries(entry_list, is_modified)
-        insert_grants(grant_list)
+        insert_grants_if_unique(grant_list)
         logging.info('Inserted ' + feed_type + ' grants into database')
+        return True

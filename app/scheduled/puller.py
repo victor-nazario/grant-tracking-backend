@@ -28,7 +28,8 @@ def make_pull(url: str, previous_etag: str) -> []:
                     'title': entry.title,
                     'content': entry.content,
                     'link': entry.link,
-                    'etag': feed.etag
+                    'etag': feed.etag,
+                    'opp_num': entry.description
                 })
 
         return entry_list
