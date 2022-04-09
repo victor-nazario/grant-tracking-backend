@@ -59,13 +59,11 @@ class GrantEntrySchema(SQLAlchemySchema):
         model = GrantEntry
         load_instance = True
 
-    #id = auto_field()
     title = auto_field()
-    #content = auto_field()
     link = auto_field()
     close_date = auto_field()
     modified = auto_field()
-    #etag = auto_field()
+
 
 if __name__ == '__main__':
     init_db()
