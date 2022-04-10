@@ -48,11 +48,73 @@ def create_swagger_spec():
     return jsonify(spec.to_dict())
 
 
-ROWS_PER_PAGE = 5
+DAFAULT_ROWS_PER_PAGE = 5
 # export FLASK_APP=__init__.py
 # FLASK_DEBUG=1
 # flask run
 # http://127.0.0.1:5000/api/grants?page=1
+
+
+@grants_bp.route('/grants', methods=['GET'])
+def available_grants():
+    """Test view
+        ---
+        get:
+            tags:
+                - Users
+            summary: searches grants
+            operationId: searchGrants
+            description:  |
+                By passing in the appropriate options, you can search for
+                available grants in the system.
+            parameters:
+            -   in: query
+                name: skip
+                description: number of records to skip for pagination
+                schema:
+                    type: integer
+                    format: int32
+                    minimum: 0
+
+            -   in: query
+                name: rows
+                description: maximum number of records to return
+                schema:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                    maximum: 50
+            responses:
+                200:
+                    description: search results matching criteria
+                    content:
+                        application/json:
+                            schema: GrantEntrySchema
+                400:
+                    description: bad input parameter
+    """
+    number_of_rows = request.args.get('rows', DAFAULT_ROWS_PER_PAGE, type=int)
+    db_session = get_session()
+    page = request.args.get("page", 1, type=int)
+    with db_session as session:
+        query_result = session.query(models.GrantEntry).all()
+        grant_list = []
+
+    for grant in query_result:
+        grant_list.append(grant_schema.dump(grant))
+
+    start = (page - 1) * number_of_rows
+    print(start + 1)
+    end = start + number_of_rows
+    print(end)
+    items = grant_list[start:end]
+    grants_paginate = Pagination(query=None, page=None, per_page=None,
+                                 total=len(items),
+                                 items=items)
+    # total_pages = float(len(grant_list) / ROWS_PER_PAGE)
+    # if page == ceil(total_pages) + 1:
+    #     print("ERROR" + str(page))
+    return jsonify(grants_paginate.items)
 
 
 @grants_bp.route('/test', methods=['GET'])
@@ -63,7 +125,7 @@ def test():
             tags:
                 - Users
             summary: searches grants
-            operationId: searchGrants
+            operationId: testSearch
             description:  |
                 By passing in the appropriate options, you can search for
                 available grants in the system.
@@ -103,37 +165,13 @@ def test():
     return 'Hello World'
 
 
-@grants_bp.route('/grants', methods=['GET'])
-def available_grants():
-    db_session = get_session()
-    page = request.args.get("page", 1, type=int)
-    with db_session as session:
-        query_result = session.query(models.GrantEntry).all()
-        grant_list = []
-
-    for grant in query_result:
-        grant_list.append(grant_schema.dump(grant))
-
-    start = (page - 1) * ROWS_PER_PAGE
-    print(start + 1)
-    end = start + ROWS_PER_PAGE
-    print(end)
-    items = grant_list[start:end]
-    grants_paginate = Pagination(query=None, page=None, per_page=None,
-                                 total=len(items),
-                                 items=items)
-    # total_pages = float(len(grant_list) / ROWS_PER_PAGE)
-    # if page == ceil(total_pages) + 1:
-    #     print("ERROR" + str(page))
-    return jsonify(grants_paginate.items)
-
-
 app.register_blueprint(grants_bp)
 app.register_blueprint(SWAGGER_BLUEPRINT, url_prefix=SWAGGER_URL)
 
 spec.components.schema("GrantEntry", schema=GrantEntrySchema)
 with app.test_request_context():
     spec.path(view=test)
+    spec.path(view=available_grants)
 
 if __name__ == '__main__':
     app.run(debug=True)
