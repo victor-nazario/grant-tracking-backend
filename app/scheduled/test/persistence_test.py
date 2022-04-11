@@ -14,7 +14,7 @@ class PersistenceTestCase(unittest.TestCase):
 
     def test_convert_to_grant(self):
         generate_random_etag()
-        entry_list = make_pull(constant.RSS_FEED_NEW_OP)
+        entry_list = make_pull(constant.RSS_FEED_NEW_OP, previous_etag='')
         grant_list = create_grants_from_entries(entry_list, False)
         self.assertTrue(len(entry_list) == len(grant_list))
         print(grant_list)
@@ -41,7 +41,7 @@ class PersistenceTestCase(unittest.TestCase):
         for entry in entry_list:
             grant_list.append(GrantEntry(title=entry['title'], opp_num=entry['opp_num'],
                                          content=entry['content'][0]['value'], link=entry['link'],
-                                         close_date=date(2022, 8, 20), modified=False,
+                                         close_date=1773624224, modified=False,
                                          etag=random_etag))
         insert_grants_if_unique(grant_list)
         grant_list_size = len(grant_list)
@@ -59,7 +59,7 @@ class PersistenceTestCase(unittest.TestCase):
         for entry in entry_list:
             grant_list.append(GrantEntry(title=entry['title'], opp_num=entry['opp_num'],
                                          content=entry['content'][0]['value'], link=entry['link'],
-                                         close_date=date(2022, 8, 20), modified=False,
+                                         close_date=1773624224, modified=False,
                                          etag=random_etag2))
         insert_grants_if_unique(grant_list)
         inserted_list2 = session.execute(select(GrantEntry.etag)).all()

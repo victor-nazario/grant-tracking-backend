@@ -25,16 +25,16 @@ class ModelsTestCase(unittest.TestCase):
 
         for entry in entry_list:
             grant_list.append(GrantEntry(title=entry['title'], content=entry['content'][0]['value'],
-                                         link=entry['link'], close_date=date(2022, 8, 20),
-                                         modified=False, etag=entry['etag']))
+                                         link=entry['link'], close_date=1773624224,
+                                         modified=False, etag=entry['etag'], opp_num=1))
 
         mod_entry_list = make_pull(constant.RSS_FEED_MOD_OP, generate_random_etag())
         grant_list_mod = []
 
         for entry in mod_entry_list:
             grant_list_mod.append(GrantEntry(title=entry['title'], content=entry['content'][0]['value'],
-                                             link=entry['link'], close_date=date(2022, 8, 20),
-                                             modified=True, etag=entry['etag']))
+                                             link=entry['link'], close_date=1773624224,
+                                             modified=True, etag=entry['etag'], opp_num=1))
 
         some_session = get_session()
         with some_session as session:

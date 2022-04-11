@@ -19,7 +19,7 @@ class GrantEntry(Base):
     opp_num = Column("opp_num", String(50), unique=True)
     content = Column("content", String)
     link = Column("link", String(150))
-    close_date = Column(DateTime)
+    close_date = Column(Integer)
     modified = Column(Boolean)
     etag = Column("etag", String(35))
 
@@ -32,7 +32,6 @@ class GrantEntry(Base):
         self.modified = modified
         self.etag = etag
 
-
     @property
     def accepts_submission(self) -> bool:
         """
@@ -40,7 +39,7 @@ class GrantEntry(Base):
         submission in the current date
         :return: a boolean representing if submission are being accepted, true if yes
         """
-        return self.close_date > datetime.utcnow()
+        return self.close_date > int(datetime.utcnow().timestamp())
 
     @property
     def is_modified(self) -> bool:

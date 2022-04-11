@@ -12,7 +12,7 @@ Delete grant from database if present date time exceeds the close date of the gr
 
 def delete_grant():
     session = get_session()
-    session.query(GrantEntry).filter(datetime.utcnow() > GrantEntry.close_date).delete()
+    session.query(GrantEntry).filter(int(datetime.utcnow().timestamp()) > GrantEntry.close_date).delete()
     session.commit()
     session.close()
     logging.info('Ran deletion layer')

@@ -13,13 +13,13 @@ class DeletionTestCase(unittest.TestCase):
     def test_deletion(self):
         session = get_session()
         session.add(GrantEntry(title="Monday", content="ehfjkewhfkjewhjkeh448", link="www.grant1.com",
-                               close_date=datetime.datetime(2021, 10, 20), etag="", modified=True))
+                               close_date=1634779424, etag="", modified=True, opp_num=1))
         session.add(GrantEntry(title="Tuesday", content="sasasasasasasa", link="www.grant2.com",
-                               close_date=datetime.datetime(2022, 1, 12), etag="", modified=True))
+                               close_date=1642037024, etag="", modified=True, opp_num=1))
         session.add(GrantEntry(title="Wednesday", content="rererererererere", link="www.grant3.com",
-                               close_date=datetime.datetime(2022, 3, 15), etag="", modified=True))
+                               close_date=1647393824, etag="", modified=True, opp_num=1))
         session.add(GrantEntry(title="Thursday", content="rererererererere", link="www.grant4.com",
-                               close_date=datetime.datetime(2026, 10, 7), etag="", modified=True))
+                               close_date=1773624224, etag="", modified=True, opp_num=1))
 
         session.commit()
         before_delete = session.query(GrantEntry).count()

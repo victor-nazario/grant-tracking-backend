@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Union
 
 
-def obtain_close_date(entry: str) -> Union[datetime, None]:
+def obtain_close_date(entry: str) -> Union[int, None]:
     """
     Given a string description for a grant entry, this function returns a datetime
     obtained from its body, if the date cannot be parsed successfully a None type will be returned
@@ -12,6 +12,7 @@ def obtain_close_date(entry: str) -> Union[datetime, None]:
     try:
         unprocessed = entry.partition("Close Date:</td><td>")[2].partition("</td></tr><tr><td>")[0]
         date_string = unprocessed[0:13].strip()
-        return datetime.strptime(date_string, '%b %d, %Y')
+        dt = datetime.strptime(date_string, '%b %d, %Y')
+        return int(dt.timestamp())
     except ValueError:
         return None

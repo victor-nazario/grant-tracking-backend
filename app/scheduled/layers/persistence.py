@@ -2,6 +2,7 @@ from app.scheduled.layers.models import GrantEntry
 from app.session_generator.create_session import get_session
 from app.scheduled.layers.processing import obtain_close_date
 from datetime import date
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from sqlalchemy.dialects.postgresql import insert
 
@@ -19,8 +20,11 @@ def create_grants_from_entries(entry_list: list, is_modified: bool):
     for entry in entry_list:
         entry_content = entry['content'][0]['value']
         close_date = obtain_close_date(entry_content)
+        # If we cannot parse a date, we will give the grant a 6 months grace period.
         if close_date is None:
-            close_date = date.today() + relativedelta(months=6)
+            future_date = date.today() + relativedelta(months=6)
+            dt = datetime.combine(future_date, datetime.min.time())
+            close_date = int(dt.timestamp())
 
         grant_list.append(GrantEntry(title=entry['title'], opp_num=entry['opp_num'],
                                      content=entry_content, link=entry['link'],

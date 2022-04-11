@@ -9,10 +9,10 @@ from app.session_generator import create_session
 class ModelsTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.model1 = GrantEntry(title='', content='', link='',  close_date=datetime.datetime(2022, 8, 20),
-                                 modified=True, etag='')
-        self.model2 = GrantEntry(title='', content='', link='', close_date=datetime.datetime(2022, 1, 12),
-                                 modified=False, etag='')
+        self.model1 = GrantEntry(title='', content='', link='',  close_date=1712883953,
+                                 modified=True, etag='', opp_num=1)
+        self.model2 = GrantEntry(title='', content='', link='', close_date=1649516869,
+                                 modified=False, etag='', opp_num=1)
 
     def test_accepts_submission(self):
         self.assertTrue(self.model1.accepts_submission)
@@ -31,7 +31,7 @@ class ModelsTestCase(unittest.TestCase):
         some_session = create_session.get_session()
         with some_session as session:
             session.add(GrantEntry(title='Titl1', content='Some content', link='test11.com',
-                                   close_date=datetime.datetime(2022, 8, 20), modified=True, etag='dsfasd'))
+                                   close_date=1649516839, modified=True, etag='dsfasd', opp_num=1))
             session.commit()
         statement = select(GrantEntry.title)
         result = session.execute(statement).all()
