@@ -49,10 +49,6 @@ def create_swagger_spec():
 
 
 DAFAULT_ROWS_PER_PAGE = 5
-# export FLASK_APP=__init__.py
-# FLASK_DEBUG=1
-# flask run
-# http://127.0.0.1:5000/api/grants?page=1
 
 
 @grants_bp.route('/grants', methods=['GET'])
@@ -111,9 +107,7 @@ def available_grants():
     grants_paginate = Pagination(query=None, page=None, per_page=None,
                                  total=len(items),
                                  items=items)
-    # total_pages = float(len(grant_list) / ROWS_PER_PAGE)
-    # if page == ceil(total_pages) + 1:
-    #     print("ERROR" + str(page))
+
     return jsonify(grants_paginate.items)
 
 

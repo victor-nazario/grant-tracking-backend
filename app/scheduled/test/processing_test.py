@@ -1,5 +1,6 @@
-from app.scheduled.layers.processing import obtain_close_date
+from app.scheduled.layers.processing import obtain_close_date, erase_b_tags
 from datetime import datetime
+import unittest
 
 test_description = "<![CDATA[ <TABLE BORDER=0 WIDTH='100%'><TR><TD><table><tr><td>Funding Opportunity ID: " \
                    "</td><td>323597</td></tr><tr><td>Opportunity Number: </td><td>20-538</td></tr><tr><td>Opportunity " \
@@ -120,11 +121,15 @@ test_description_contains_extra_wording = "<![CDATA[ <TABLE BORDER=0 WIDTH='100%
 test_values = [test_description, test_description_contains_extra_wording]
 
 
-def test_obtain_close_date():
-    for value in test_values:
-        assert type(obtain_close_date(value)) is datetime, "Expected returned value to " \
-                                                                                         "be of type datetime "
+class PersistenceTestCase(unittest.TestCase):
 
+    def test_obtain_close_date(self):
+        for value in test_values:
+            assert type(obtain_close_date(value)) is datetime, "Expected returned value to " \
+                                                               "be of type datetime "
 
-if __name__ == '__main__':
-    test_obtain_close_date()
+    def test_erase_b_tags(self):
+        tag1 = '<b>O-OJJDP-2022-171251</b>'
+        result_tag1 = erase_b_tags(tag1)
+        self.assertEquals(result_tag1, 'O-OJJDP-2022-171251')
+

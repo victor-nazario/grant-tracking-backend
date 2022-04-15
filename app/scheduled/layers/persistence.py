@@ -1,6 +1,6 @@
 from app.scheduled.layers.models import GrantEntry
 from app.session_generator.create_session import get_session
-from app.scheduled.layers.processing import obtain_close_date
+from app.scheduled.layers.processing import obtain_close_date, erase_b_tags
 from datetime import date
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -26,7 +26,11 @@ def create_grants_from_entries(entry_list: list, is_modified: bool):
             dt = datetime.combine(future_date, datetime.min.time())
             close_date = int(dt.timestamp())
 
-        grant_list.append(GrantEntry(title=entry['title'], opp_num=entry['opp_num'],
+        opp_num = erase_b_tags(entry['opp_num'])
+        if opp_num is None:
+            opp_num = entry['opp_num']
+
+        grant_list.append(GrantEntry(title=entry['title'], opp_num=opp_num,
                                      content=entry_content, link=entry['link'],
                                      close_date=close_date, modified=is_modified,
                                      etag=entry['etag']))

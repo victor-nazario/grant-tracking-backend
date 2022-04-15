@@ -16,17 +16,16 @@ def get_engine(uri: str):
     :param uri: string
     :return: a new engine
     """
-    url = uri
-    if not database_exists(url):
-        create_database(url, 'entries')
-    new_engine = create_engine(url, pool_size=50, echo=False, echo_pool=False)
+    if not database_exists(uri):
+        create_database(uri)
+    new_engine = create_engine(uri, pool_size=50, echo=False, echo_pool=False)
     return new_engine
 
 
 def get_session():
     """
     This function creates new sessions after checking if the database exist by calling the function
-    _get_engine which returns a new engine to be used by the new session
+    get_engine which returns a new engine to be used by the new session.
     :return: a new session
     """
     new_engine = get_engine(db_settings['DATABASE_URI'])

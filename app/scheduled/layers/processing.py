@@ -16,3 +16,10 @@ def obtain_close_date(entry: str) -> Union[int, None]:
         return int(dt.timestamp())
     except ValueError:
         return None
+
+
+def erase_b_tags(opportunity_number: str):
+    try:
+        return opportunity_number.partition('<b>')[2].partition('</b>')[0]
+    except ValueError:
+        return None
