@@ -98,12 +98,17 @@ def available_grants():
 
     for grant in query_result:
         grant_list.append(grant_schema.dump(grant))
+    # sorting from the least recent date to most recent date
+    # sorted_grant_list = sorted(grant_list, key=lambda x: x['close_date'])
+
+    # sorting from most recent date to the least recent date
+    sorted_grant_list = sorted(grant_list, key=lambda date: date['close_date'], reverse=True)
 
     start = (page - 1) * number_of_rows
     print(start + 1)
     end = start + number_of_rows
     print(end)
-    items = grant_list[start:end]
+    items = sorted_grant_list[start:end]
     grants_paginate = Pagination(query=None, page=None, per_page=None,
                                  total=len(items),
                                  items=items)
@@ -156,6 +161,7 @@ def test():
                 400:
                     description: bad input parameter
     """
+
     return 'Hello World'
 
 
@@ -166,8 +172,6 @@ spec.components.schema("GrantEntry", schema=GrantEntrySchema)
 with app.test_request_context():
     spec.path(view=test)
     spec.path(view=available_grants)
-
-
 
 
 
