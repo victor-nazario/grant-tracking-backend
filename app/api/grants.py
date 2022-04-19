@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, Flask
+from flask import Blueprint, jsonify, request, Flask, render_template
 from flask_sqlalchemy import Pagination
 from marshmallow import Schema, fields
 from app.scheduled.layers import models
@@ -116,6 +116,43 @@ def available_grants():
     return jsonify(grants_paginate.items)
 
 
+@app.route('/table')
+def index():
+    return render_template('table.html', title='Server-Driven Table')
+
+
+@app.route('/api/data')
+def data():
+
+    db_session = get_session()
+    query = db_session.query(models.GrantEntry)
+
+    total_filtered = query.count()
+
+    query_result = query.all()
+
+    grant_list = []
+    for grant in query_result:
+        grant_list.append(grant_schema.dump(grant))
+
+    # pagination
+    start = request.args.get('start', type=int)
+    length = request.args.get('length', type=int)
+
+    items = grant_list[start:length]
+    grants_paginate = Pagination(query=None, page=None, per_page=None,
+                                 total=len(items),
+                                 items=items)
+
+    # response
+    return {
+        'data': [item for item in grants_paginate.items],
+        'recordsFiltered': total_filtered,
+        'recordsTotal': total_filtered,
+        'draw': request.args.get('draw', type=int),
+    }
+
+
 @grants_bp.route('/test', methods=['GET'])
 def test():
     """Test view
@@ -173,5 +210,7 @@ with app.test_request_context():
     spec.path(view=test)
     spec.path(view=available_grants)
 
+if __name__ == '__main__':
+    app.run(debug=False)
 
 
