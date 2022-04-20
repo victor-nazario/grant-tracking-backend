@@ -1,0 +1,8 @@
+FROM python:alpine3.15
+#COPY app/api /grant-tracking-backend
+COPY . /grant-tracking-backend
+WORKDIR /grant-tracking-backend
+RUN pip install -r app/scheduled/scheduled-requirements.txt
+ENV PYTHONPATH "${PYTHONPATH}:/grant-tracking-backend"
+ENTRYPOINT [ "python3" ]
+CMD [ "app/scheduled/__main__.py" ]
