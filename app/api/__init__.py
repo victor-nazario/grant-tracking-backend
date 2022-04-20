@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask
-from app.api.grants import grants_bp
+from grants import grants_bp
 
 
 def create_app(test_config=None):
@@ -28,3 +28,8 @@ def create_app(test_config=None):
     app.register_blueprint(grants_bp, url_prefix='/api')
 
     return app
+
+
+if __name__ == "__main__":
+    app = create_app()
+    app.run(host='0.0.0.0', port=8085, debug=False)

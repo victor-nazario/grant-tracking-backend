@@ -1,11 +1,19 @@
 # grant-tracking-backend
 
+It's important that developers or administrators trying to test or dploy the project follow the 
+steps outlined before, as the application comprises various containers communicating between them.
 
-#Instructions on Setting Postgresql and pgAdmin for Development Environments
+# How to create a network for the containers to communicate in the same space
 * Make sure [Docker](https://docs.docker.com/get-docker/) is installed in your system.
 &nbsp; 
 
-  
+* Execute ```$ docker network create --subnet=172.20.128.0/16 gtb-net``` 
+* In the case there is already an overlaping pool on the address space, change it on the 
+command and in the docker-compose.
+
+
+#Instructions on Setting Postgresql and pgAdmin for Development Environments
+
 * On the terminal, mv to the project root. Once in the root
 execute ``$ docker-compose up`` this will download necessary dependencies and set up the containers as needed 
 for the application to work.
