@@ -15,4 +15,3 @@ def delete_grant():
     session.query(GrantEntry).filter(int(datetime.utcnow().timestamp()) > GrantEntry.close_date).delete()
     session.commit()
     session.close()
-    logging.info('Ran deletion layer')

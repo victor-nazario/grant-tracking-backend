@@ -27,20 +27,22 @@ services:
     container_name: gtb-api
     build:
       context: .
-      dockerfile: Dockerfile.api
+      dockerfile: Dockerfile
     depends_on:
       - db
     ports:
       - "8085:8085"
+    command: [ "app/api/__init__.py" ]
     networks:
       - default
   scheduled:
     container_name: gtb-scheduled
     build:
       context: .
-      dockerfile: Dockerfile.scheduled
+      dockerfile: Dockerfile
     depends_on:
       - db
+    command: [ "app/scheduled/__main__.py" ]
     networks:
       - default
 

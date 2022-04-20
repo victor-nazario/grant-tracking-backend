@@ -5,7 +5,6 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy_utils import database_exists, create_database
 from app.scheduled.layers.models import init_db
 
-
 url = 'postgresql+psycopg2://root:root@localhost:5432/test_create_session_db'
 
 
