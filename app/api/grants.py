@@ -30,7 +30,6 @@ SWAGGER_BLUEPRINT = get_swaggerui_blueprint(
     }
 )
 
-
 app = Flask(__name__)
 
 
@@ -123,7 +122,6 @@ def index():
 
 @app.route('/api/data')
 def data():
-
     db_session = get_session()
     query = db_session.query(models.GrantEntry)
 
@@ -138,15 +136,13 @@ def data():
     # pagination
     start = request.args.get('start', type=int)
     length = request.args.get('length', type=int)
-
-    items = grant_list[start:length]
-    grants_paginate = Pagination(query=None, page=None, per_page=None,
-                                 total=len(items),
-                                 items=items)
+    print(start)
+    print(length + start)
+    items = grant_list[start:length + start]
 
     # response
     return {
-        'data': [item for item in grants_paginate.items],
+        'data': [item for item in items],
         'recordsFiltered': total_filtered,
         'recordsTotal': total_filtered,
         'draw': request.args.get('draw', type=int),
@@ -212,5 +208,3 @@ with app.test_request_context():
 
 if __name__ == '__main__':
     app.run(debug=False)
-
-
