@@ -173,5 +173,7 @@ with app.test_request_context():
     spec.path(view=test)
     spec.path(view=available_grants)
 
+if __name__ == '__main__':
+    app.run()
 
 
