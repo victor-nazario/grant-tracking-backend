@@ -117,7 +117,7 @@ def available_grants():
 
 @app.route('/table')
 def index():
-    return render_template('table.html', title='Server-Driven Table')
+    return render_template('table.html', title='Grant Tracking Platform')
 
 
 @app.route('/api/data')
@@ -143,6 +143,7 @@ def data():
     # response
     return {
         'data': [item for item in items],
+        # Todo: change recordsFiltered and recordsTotal
         'recordsFiltered': total_filtered,
         'recordsTotal': total_filtered,
         'draw': request.args.get('draw', type=int),
@@ -207,4 +208,4 @@ with app.test_request_context():
     spec.path(view=available_grants)
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
