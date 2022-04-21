@@ -18,7 +18,7 @@ for the application to work.
 &nbsp; 
 
 
-#Instructions on using pgAdmin to manage the dev environment database
+# Instructions on using pgAdmin to manage the dev environment database
 
 * Once the containers are running (verify with ``$ docker ps``) on a web browser visit 
 [http://localhost:5050/](http://localhost:5050/) and login with username ``admin@admin.com`` and password ``root``.
