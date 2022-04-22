@@ -150,61 +150,11 @@ def data():
     }
 
 
-@grants_bp.route('/test', methods=['GET'])
-def test():
-    """Test view
-        ---
-        get:
-            tags:
-                - Users
-            summary: searches grants
-            operationId: testSearch
-            description:  |
-                By passing in the appropriate options, you can search for
-                available grants in the system.
-            parameters:
-            -   in: query
-                name: searchString
-                description: pass an optional search string for looking up inventory
-                required: false
-                schema:
-                    type: string
-
-            -   in: query
-                name: skip
-                description: number of records to skip for pagination
-                schema:
-                    type: integer
-                    format: int32
-                    minimum: 0
-
-            -   in: query
-                name: limit
-                description: maximum number of records to return
-                schema:
-                    type: integer
-                    format: int32
-                    minimum: 0
-                    maximum: 50
-            responses:
-                200:
-                    description: search results matching criteria
-                    content:
-                        application/json:
-                            schema: GrantEntrySchema
-                400:
-                    description: bad input parameter
-    """
-
-    return 'Hello World'
-
-
 app.register_blueprint(grants_bp)
 app.register_blueprint(SWAGGER_BLUEPRINT, url_prefix=SWAGGER_URL)
 
 spec.components.schema("GrantEntry", schema=GrantEntrySchema)
 with app.test_request_context():
-    spec.path(view=test)
     spec.path(view=available_grants)
 
 if __name__ == '__main__':
