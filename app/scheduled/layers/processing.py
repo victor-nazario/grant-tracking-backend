@@ -19,6 +19,12 @@ def obtain_close_date(entry: str) -> Union[int, None]:
 
 
 def erase_b_tags(opportunity_number: str):
+    """
+    The function received a string representing a grant opportunity number and erased the <b> html tags
+    surrounding the opportunity number. These html tags come directly from the RSS feed.
+    :param opportunity_number: str
+    :return: an opportunity string without the <b> tags or None if not able to parse
+    """
     try:
         return opportunity_number.partition('<b>')[2].partition('</b>')[0]
     except ValueError:
