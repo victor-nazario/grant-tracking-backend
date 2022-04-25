@@ -133,11 +133,37 @@ def data():
     for grant in query_result:
         grant_list.append(grant_schema.dump(grant))
 
+    # sorting
+    # order = []
+    i = 0
+    while True:
+        col_index = request.args.get(f'order[{i}][column]')
+        if col_index is None:
+            break
+        # col_name = request.args.get(f'columns[{col_index}][data]')
+        # if col_name not in ['close_date']:
+        #     col_name = 'close_date'
+        descending = request.args.get(f'order[{i}][dir]') == 'desc'
+        # col = grant_list[0].get(col_name, None)
+        # print(col)
+
+        # sorting from most recent date to the least recent date
+        if descending:
+            grant_list = sorted(grant_list, key=lambda date: date['close_date'], reverse=True)
+
+        # sorting from the least recent date to most recent date
+        else:
+            grant_list = sorted(grant_list, key=lambda date: date['close_date'])
+        # order.append(col)
+        i += 1
+    # if order:
+    #     grant_list = sorted(grant_list, key=lambda date: date['close_date'], reverse=True)
+
     # pagination
     start = request.args.get('start', type=int)
     length = request.args.get('length', type=int)
-    print(start)
-    print(length + start)
+    # print(start)
+    # print(length + start)
     items = grant_list[start:length + start]
 
     # response
