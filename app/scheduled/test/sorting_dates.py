@@ -20,6 +20,8 @@ class SortingTestCase(unittest.TestCase):
                                close_date=1647393824, etag="", modified=True, opp_num=4))
         session.add(GrantEntry(title="Thursday", content="rererererererere", link="www.grant4.com",
                                close_date=1773624224, etag="", modified=True, opp_num=5))
+        session.add(GrantEntry(title="Friday", content="jfsdkhhjdhfkjdsh", link="www.grant5.com",
+                               close_date=1990192765, etag="", modified=True, opp_num=6))
 
         session.commit()
         session.close()
