@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, Flask
+from flask import Blueprint, jsonify, request, Flask, render_template
 from flask_sqlalchemy import Pagination
 from marshmallow import Schema, fields
 from app.scheduled.layers import models
@@ -29,7 +29,6 @@ SWAGGER_BLUEPRINT = get_swaggerui_blueprint(
         'app_name': 'Grant Tracking Platform'
     }
 )
-
 
 app = Flask(__name__)
 
@@ -116,53 +115,65 @@ def available_grants():
     return jsonify(grants_paginate.items)
 
 
-@grants_bp.route('/test', methods=['GET'])
-def test():
-    """Test view
-        ---
-        get:
-            tags:
-                - Users
-            summary: searches grants
-            operationId: testSearch
-            description:  |
-                By passing in the appropriate options, you can search for
-                available grants in the system.
-            parameters:
-            -   in: query
-                name: searchString
-                description: pass an optional search string for looking up inventory
-                required: false
-                schema:
-                    type: string
+@app.route('/table')
+def index():
+    return render_template('table.html', title='Grant Tracking Platform')
 
-            -   in: query
-                name: skip
-                description: number of records to skip for pagination
-                schema:
-                    type: integer
-                    format: int32
-                    minimum: 0
 
-            -   in: query
-                name: limit
-                description: maximum number of records to return
-                schema:
-                    type: integer
-                    format: int32
-                    minimum: 0
-                    maximum: 50
-            responses:
-                200:
-                    description: search results matching criteria
-                    content:
-                        application/json:
-                            schema: GrantEntrySchema
-                400:
-                    description: bad input parameter
-    """
+@app.route('/api/data')
+def data():
+    db_session = get_session()
+    query = db_session.query(models.GrantEntry)
 
-    return 'Hello World'
+    total_filtered = query.count()
+
+    query_result = query.all()
+
+    grant_list = []
+    for grant in query_result:
+        grant_list.append(grant_schema.dump(grant))
+
+    # sorting
+    # order = []
+    i = 0
+    while True:
+        col_index = request.args.get(f'order[{i}][column]')
+        if col_index is None:
+            break
+        # col_name = request.args.get(f'columns[{col_index}][data]')
+        # if col_name not in ['close_date']:
+        #     col_name = 'close_date'
+        descending = request.args.get(f'order[{i}][dir]') == 'desc'
+        # col = grant_list[0].get(col_name, None)
+        # print(col)
+
+        # sorting from most recent date to the least recent date
+        if descending:
+            grant_list = sorted(grant_list, key=lambda date: date['close_date'], reverse=True)
+
+        # sorting from the least recent date to most recent date
+        else:
+            grant_list = sorted(grant_list, key=lambda date: date['close_date'])
+        # order.append(col)
+        i += 1
+    # if order:
+    #     grant_list = sorted(grant_list, key=lambda date: date['close_date'], reverse=True)
+
+    # pagination
+    start = request.args.get('start', type=int)
+    length = request.args.get('length', type=int)
+    # print(start)
+    # print(length + start)
+    items = grant_list[start:length + start]
+
+    # response
+    return {
+        'data': [item for item in items],
+        # Todo: change recordsFiltered and recordsTotal
+        'recordsFiltered': total_filtered,
+        'recordsTotal': total_filtered,
+        'draw': request.args.get('draw', type=int),
+    }
 
 
 app.register_blueprint(grants_bp)
@@ -170,10 +181,7 @@ app.register_blueprint(SWAGGER_BLUEPRINT, url_prefix=SWAGGER_URL)
 
 spec.components.schema("GrantEntry", schema=GrantEntrySchema)
 with app.test_request_context():
-    spec.path(view=test)
     spec.path(view=available_grants)
 
 if __name__ == '__main__':
-    app.run()
-
-
+    app.run(debug=True)

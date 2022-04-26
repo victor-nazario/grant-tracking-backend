@@ -1,0 +1,33 @@
+{% extends "index.html" %}
+
+{% block content %}
+  <table id="data" class="table table-striped">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Link</th>
+        <th>Close Date</th>
+        <th>Modified</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    $(document).ready(function () {
+      $('#data').DataTable({
+        ajax: '/api/data',
+        serverSide: true,
+        columns: [
+          {data: 'title', orderable: false},
+          {data: 'link', orderable: false},
+          {data: 'close_date', render: $.fn.dataTable.render.moment('X','M/DD/YYYY')},
+          {data: 'modified', orderable: false}
+        ],
+      });
+    });
+  </script>
+{% endblock %}

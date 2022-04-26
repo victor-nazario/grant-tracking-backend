@@ -49,6 +49,14 @@ class GrantEntry(Base):
         """
         return self.modified
 
+    def to_dict(self) -> dict:
+        return {
+            'title': self.title,
+            'link': self.link,
+            'close_date': self.close_date,
+            'modified': self.modified
+        }
+
     def __eq__(self, other):
         return type(self) is type(other) and self.id == other.id
 
