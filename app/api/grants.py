@@ -64,14 +64,6 @@ def available_grants():
                 available grants in the system.
             parameters:
             -   in: query
-                name: skip
-                description: number of records to skip for pagination
-                schema:
-                    type: integer
-                    format: int32
-                    minimum: 0
-
-            -   in: query
                 name: rows
                 description: maximum number of records to return
                 schema:
