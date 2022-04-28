@@ -90,8 +90,6 @@ def available_grants():
     for grant in query_result:
         grant_list.append(grant_schema.dump(grant))
     # sorting from the least recent date to most recent date
-    # sorted_grant_list = sorted(grant_list, key=lambda x: x['close_date'])
-
     # sorting from most recent date to the least recent date
     sorted_grant_list = sorted(grant_list, key=lambda date: date['close_date'], reverse=True)
 
@@ -147,7 +145,6 @@ def data():
     # response
     return {
         'data': [item for item in items],
-        # Todo: change recordsFiltered and recordsTotal
         'recordsFiltered': total_filtered,
         'recordsTotal': total_filtered,
         'draw': request.args.get('draw', type=int),
