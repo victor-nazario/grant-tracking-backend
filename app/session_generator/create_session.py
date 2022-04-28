@@ -4,7 +4,7 @@ from sqlalchemy_utils import database_exists, create_database
 
 
 db_settings = {
-    'DATABASE_URI': 'postgresql+psycopg2://root:root@localhost:5432/test_db',
+    'DATABASE_URI': 'postgresql+psycopg2://root:root@db:5432/test_db',
     'DATABASE_CONNECT_OPTIONS': ''
 }
 
