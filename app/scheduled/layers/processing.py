@@ -6,7 +6,7 @@ def obtain_close_date(entry: str) -> Union[int, None]:
     """
     Given a string description for a grant entry, this function returns a datetime
     obtained from its body, if the date cannot be parsed successfully a None type will be returned
-    :type entry: str
+    :param entry: str containing a grant's description
     :returns a datetime object representing the date or None if not able to parse
     """
     try:
@@ -22,8 +22,8 @@ def erase_b_tags(opportunity_number: str):
     """
     The function received a string representing a grant opportunity number and erased the <b> html tags
     surrounding the opportunity number. These html tags come directly from the RSS feed.
-    :param opportunity_number: str
-    :return: an opportunity string without the <b> tags or None if not able to parse
+    :param opportunity_number: str representing a grant's opportunity number
+    :return an opportunity string without the <b> tags or None if not able to parse
     """
     try:
         return opportunity_number.partition('<b>')[2].partition('</b>')[0]

@@ -13,7 +13,7 @@ def get_engine(uri: str):
     """
     Checks if database exist before creating a new engine.
     The function receives the database uri as an argument to create the engine.
-    :param uri: string
+    :param uri: str containing the database’s uri
     :return: a new engine
     """
     if not database_exists(uri):
@@ -24,7 +24,7 @@ def get_engine(uri: str):
 
 def get_session():
     """
-    This function creates new sessions after checking if the database exist by calling the function
+    This function creates new sessions after checking if the database exists by calling the function
     get_engine which returns a new engine to be used by the new session.
     :return: a new session
     """

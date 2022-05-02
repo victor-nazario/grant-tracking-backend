@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.DEBUG,
 def initiate_pull_and_process_layers():
     """
     This is the function that orchestrates and manages all scheduled jobs (such as pulling, processing,
-    persistence, etc) and will be run a given amount of times per day.
+    persistence, etc) and will be run a given number of times per day.
     """
     feedparser.USER_AGENT = constant.USER_AGENT
     session_from_model = get_session()
@@ -55,6 +55,7 @@ def _pull_and_persist(url: str, last_etag: str, is_modified: bool):
     :param url: string containing the url for the RSS Feed
     :param last_etag: the last etag stored in the database for a specific feed
     :param is_modified: True for modified api, False otherwise
+    :return True if connection to the RSS feed was successful
     """
     entry_list = make_pull(url, last_etag)
     feed_type = "MODIFIED" if is_modified else "NEW"

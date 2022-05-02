@@ -10,7 +10,7 @@ def make_pull(url: str, previous_etag: str) -> []:
     nonprofits. Returns a map with entries for the relevant columns, each containing a list of entries
     :param previous_etag: Str representing the prev. known etag of the RSS. Used to identify if feed is already parsed.
     :param url: The url where the feed to pull is available
-    :returns {}
+    :returns []
     """
     try:
         feed = feedparser.parse(url, etag=previous_etag)

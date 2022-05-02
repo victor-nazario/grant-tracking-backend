@@ -11,7 +11,7 @@ def create_grants_from_entries(entry_list: list, is_modified: bool):
     """
     Creates a list of GrantEntry objects from a list of entries. Each entry contains the title,
     the content, and the link for each grant.
-    :param is_modified: if the entry_list contains modified entries or not
+    :param is_modified: Should be true if the entry_list contains modified entries.
     :return list of GrantEntry objects
     :param entry_list: list
     """
@@ -40,7 +40,7 @@ def create_grants_from_entries(entry_list: list, is_modified: bool):
 
 def insert_grants_if_unique(grant_list: list):
     """
-    Insert grants in database if their opportunity number does not exist already in the database,
+    Insert grants in the database if their opportunity number does not exist already in the database,
     otherwise, updates de current grant with the new data. The function calls the private function
     _insert_modified_grants, if the list grant_list contains a list of modified grants. This is,
     if the modified property is 'True'. If the modified property is 'False', the _insert_new_grants
