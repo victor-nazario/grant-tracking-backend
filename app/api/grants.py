@@ -103,12 +103,12 @@ def available_grants():
     return jsonify(grants_paginate.items)
 
 
-@app.route('/table')
+@grants_bp.route('/table')
 def index():
     return render_template('table.html', title='Grant Tracking Platform')
 
 
-@app.route('/api/data')
+@grants_bp.route('/data')
 def data():
     db_session = get_session()
     query = db_session.query(models.GrantEntry)
