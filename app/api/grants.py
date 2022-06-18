@@ -8,20 +8,31 @@ from apispec import APISpec
 from apispec_webframeworks.flask import FlaskPlugin
 from apispec.ext.marshmallow import MarshmallowPlugin
 from flask_swagger_ui import get_swaggerui_blueprint
+import yaml
 
 grants_bp = Blueprint('api', __name__)
 grant_schema = GrantEntrySchema()
 
+
+OPENAPI_SPEC = """
+servers:
+- url: http://localhost:8085/api/
+  description: The development API server
+"""
+
+settings = yaml.safe_load(OPENAPI_SPEC)
 # Swagger configs
 spec = APISpec(
     title='Grant-Tracking-Platform-Swagger-Documentation',
     version='1.0.0',
     openapi_version='3.0.2',
-    plugins=[FlaskPlugin(), MarshmallowPlugin()]
+    plugins=[FlaskPlugin(), MarshmallowPlugin()],
+    **settings
 )
 
+
 SWAGGER_URL = '/swagger'
-API_URL = '/swagger.json'
+API_URL = 'swagger.json'
 SWAGGER_BLUEPRINT = get_swaggerui_blueprint(
     SWAGGER_URL,
     API_URL,
@@ -42,7 +53,7 @@ class GistSchema(Schema):
     content = fields.Str()
 
 
-@grants_bp.route('/swagger.json')
+@SWAGGER_BLUEPRINT.route('/swagger.json')
 def create_swagger_spec():
     return jsonify(spec.to_dict())
 
@@ -69,8 +80,16 @@ def available_grants():
                 schema:
                     type: integer
                     format: int32
-                    minimum: 0
-                    maximum: 50
+                    minimum: 5
+                    maximum: 100
+
+            -   in: query
+                name: page
+                description: current page number
+                schema:
+                    type: integer
+                    format: int32
+                    minimum: 1
             responses:
                 200:
                     description: search results matching criteria

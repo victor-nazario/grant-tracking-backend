@@ -2,6 +2,8 @@ import os
 
 from flask import Flask
 from grants import grants_bp
+from grants import SWAGGER_BLUEPRINT
+
 
 
 def create_app(test_config=None):
@@ -26,7 +28,7 @@ def create_app(test_config=None):
         pass
 
     app.register_blueprint(grants_bp, url_prefix='/api')
-
+    app.register_blueprint(SWAGGER_BLUEPRINT, url_prefix='/swagger')
     return app
 
 
